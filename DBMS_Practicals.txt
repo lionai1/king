@@ -1,0 +1,181 @@
+=============================
+Practical 1: SQL Queries
+=============================
+Q: Perform all SQL Queries: CRUD, Joins, Clauses etc
+
+-- Setup sample tables
+CREATE TABLE students (id INT PRIMARY KEY, name VARCHAR(100), age INT, city VARCHAR(100));
+CREATE TABLE courses (id INT PRIMARY KEY, title VARCHAR(100), credits INT);
+CREATE TABLE enrollments (student_id INT, course_id INT, grade VARCHAR(2),
+  PRIMARY KEY(student_id, course_id),
+  FOREIGN KEY(student_id) REFERENCES students(id),
+  FOREIGN KEY(course_id) REFERENCES courses(id)
+);
+
+-- CRUD
+INSERT INTO students VALUES (1, 'Alice', 21, 'Pune'), (2, 'Bob', 22, 'Mumbai');
+INSERT INTO courses VALUES (10, 'Databases', 4), (11, 'ML', 3);
+INSERT INTO enrollments VALUES (1,10,'A'), (2,11,'B');
+
+SELECT * FROM students;
+SELECT name FROM students WHERE age >= 22;
+
+UPDATE students SET city = 'Mumbai' WHERE id = 1;
+
+DELETE FROM enrollments WHERE student_id = 2 AND course_id = 11;
+DELETE FROM students WHERE id = 2;
+
+-- Joins
+SELECT s.name, c.title
+FROM students s
+JOIN enrollments e ON s.id = e.student_id
+JOIN courses c ON e.course_id = c.id;
+
+SELECT s.name, c.title
+FROM students s
+LEFT JOIN enrollments e ON s.id = e.student_id
+LEFT JOIN courses c ON e.course_id = c.id;
+
+SELECT c.title, s.name
+FROM courses c
+RIGHT JOIN enrollments e ON c.id = e.course_id
+RIGHT JOIN students s ON e.student_id = s.id;
+
+SELECT s.name, c.title FROM students s CROSS JOIN courses c;
+
+-- Clauses
+SELECT c.title, COUNT(*) AS enrolled_count
+FROM courses c
+JOIN enrollments e ON c.id = e.course_id
+GROUP BY c.title
+HAVING COUNT(*) >= 1
+ORDER BY enrolled_count DESC
+LIMIT 10;
+
+
+=============================
+Practical 2: MongoDB Basics & Aggregation
+=============================
+Q: Perform MongoDB CRUD operations and Aggregation.
+
+use university;
+
+db.students.insertMany([
+  { _id: 1, name: "Alice", age: 21, city: "Pune", scores: [80,85,90] },
+  { _id: 2, name: "Bob", age: 22, city: "Mumbai", scores: [70,75] },
+  { _id: 3, name: "Chinmay", age: 23, city: "Pune", scores: [90,92] }
+]);
+
+db.students.find({city: "Pune"}).pretty();
+db.students.updateOne({ _id: 1 }, { $set: { age: 22 } });
+db.students.deleteOne({ _id: 2 });
+
+db.students.aggregate([
+  { $unwind: "$scores" },
+  { $group: { _id: "$city", avgScore: { $avg: "$scores" }, count: { $sum: 1 } } },
+  { $project: { city: "$_id", avgScore: 1, count: 1, _id: 0 } },
+  { $sort: { avgScore: -1 } }
+]);
+
+
+=============================
+Practical 3: MongoDB Replication, Backup & Restore
+=============================
+Q1: Create Replica Set
+rs.initiate({
+  _id: "rs0",
+  members: [
+    { _id: 0, host: "mongo1.example.com:27017" },
+    { _id: 1, host: "mongo2.example.com:27017" },
+    { _id: 2, host: "mongo3.example.com:27017" }
+  ]
+});
+
+Q2: Backup
+mongodump --db=university --out=/backups/university-$(date +%F)
+
+Q3: Restore
+mongorestore --db=university --drop /backups/university-2025-09-22/university
+
+
+=============================
+Practical 4: Java/Python/R and MongoDB
+=============================
+Q: Connect to MongoDB using Java, Python, R and perform CRUD.
+
+Java:
+(MongoDB Java Driver code)
+
+Python:
+(pymongo example)
+
+R:
+(mongolite example)
+
+
+=============================
+Practical 5: Cassandra Data Model
+=============================
+Q1: Keyspace Operations
+CREATE KEYSPACE university WITH replication = {'class': 'SimpleStrategy', 'replication_factor' : 3};
+
+Q2: Table Operations
+CREATE TABLE university.students (id uuid PRIMARY KEY, name text, age int, city text);
+
+Q3: CRUD
+INSERT INTO university.students (id, name, age, city) VALUES (uuid(), 'Chinmay', 23, 'Pune');
+
+Q4: CQL Types
+(text, int, uuid, boolean, timestamp, list, map, set)
+
+
+=============================
+Practical 6: Java/Python/R and Cassandra
+=============================
+Q: Connect Java/Python/R with Cassandra and perform CRUD.
+
+(Java code example)
+(Python code example)
+(R simple system call example)
+
+
+=============================
+Practical 7: CouchDB Basics
+=============================
+Q: Database, Document, Attachment
+
+curl -X PUT http://admin:password@127.0.0.1:5984/mydb
+curl -X POST http://admin:password@127.0.0.1:5984/mydb -H "Content-Type: application/json" -d '{"name":"Chinmay"}'
+
+
+=============================
+Practical 8: Java/Python/R and CouchDB
+=============================
+Q: Connect Java/Python/R with CouchDB and perform CRUD.
+
+(Java Ektorp code)
+(Python requests example)
+(R httr example)
+
+
+=============================
+Practical 9: Neo4j
+=============================
+Q: Neo4j CQL (Create, Read, String/Aggregate, Admin).
+
+CREATE (a:Person {name:'Alice'});
+MATCH (p:Person) RETURN p.name;
+
+neo4j-admin dump --database=neo4j --to=/backups/neo4j-dump
+
+
+=============================
+Practical 10: Redis
+=============================
+Q: Basic Redis Operations (CLI, Python, Java)
+
+SET user:1:name "Chinmay"
+GET user:1:name
+
+Python redis-py example
+Java Jedis example

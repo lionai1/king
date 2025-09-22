@@ -1,0 +1,289 @@
+📘 Practical Exam Question Bank with Code (Practicals 1–8)
+
+--------------------------------------------------
+Practical 1 – SQL Basics
+--------------------------------------------------
+Q1) Write SQL statements to create a customer table cust24.
+create table cust24(
+  cust_id varchar(5) primary key,
+  lname varchar(15),
+  fname varchar(15),
+  area varchar(10),
+  phone_no int
+);
+
+Q2) Insert sample records into the cust24 table.
+insert into cust24 values('a101','gade','vinaya','uran',9930855789);
+insert into cust24 values('a102','wani','akshaya','raver',9881120608);
+insert into cust24 values('a103','bharambe','anita','nagothane',9960697431);
+insert into cust24 values('a104','barudwale','aayesha','seawoods',9892888504);
+insert into cust24 values('a105','thube','rohini','nashik',2811281);
+insert into cust24 values('a106','raverkar','namrata','pune',9850904973);
+insert into cust24 values('a107','nandarshi','prerana','jalgaon',9881173322);
+insert into cust24 values('a108','gade','nikita','nashik',9881136525);
+insert into cust24 values('a109','wani','dipali','jalgaon',9862356562);
+
+Q3) Create a table movie24.
+create table movie24(
+  movie_no number(5) primary key,
+  title varchar(25),
+  type varchar(10),
+  star varchar(25),
+  price number(8)
+);
+
+Q4) Insert records into the movie24 table.
+insert into movie24 values(1,'Krrish','Action','Hritik',150);
+insert into movie24 values(2,'Mohabbatein','Romantic','Shahrukh',100);
+insert into movie24 values(3,'Herapheri','Comedy','Akshay',50);
+insert into movie24 values(4,'Baghban','Family','Amitabh',80);
+insert into movie24 values(5,'Vastushatra','Thriller','Rajpal',70);
+insert into movie24 values(6,'JodhaAkabar','Historical','Hritik',100);
+insert into movie24 values(7,'Chakde','Sport','Shahrukh',90);
+insert into movie24 values(8,'Titanic','Romantic','Caprio',200);
+insert into movie24 values(9,'Dhoom2','Action','Hritik',150);
+
+Q5) Create a table invoice24 with foreign keys.
+create table invoice24(
+  inv_no varchar(10) primary key,
+  cust_id varchar(10) references cust24(cust_id),
+  movie_no number(5) references movie24(movie_no),
+  issue_date date,
+  return_date date
+);
+
+Q6) Insert records into the invoice24 table.
+insert into invoice24 values('i01','a101',1,'02-may-2007','04-may-2007');
+insert into invoice24 values('i02','a102',2,'03-may-2007','05-may-2007');
+insert into invoice24 values('i03','a103',3,'02-may-2007','05-may-2007');
+insert into invoice24 values('i04','a104',3,'09-may-2007','11-may-2007');
+insert into invoice24 values('i05','a105',4,'08-may-2007','10-may-2007');
+insert into invoice24 values('i06','a109',4,'09-may-2007','12-may-2007');
+insert into invoice24 values('i07','a104',5,'12-may-2007','15-may-2007');
+insert into invoice24 values('i08','a108',6,'10-may-2007','14-may-2007');
+insert into invoice24 values('i09','a105',7,'19-may-2007','21-may-2007');
+insert into invoice24 values('i10','a101',8,'15-may-2007','18-may-2007');
+insert into invoice24 values('i11','a104',8,'19-may-2007','20-may-2007');
+insert into invoice24 values('i12','a107',9,'22-may-2007','24-may-2007');
+insert into invoice24 values('i13','a106',9,'12-may-2007','14-may-2007');
+
+Q7) List the names of all customers.
+select fname, lname from cust24;
+
+Q8) Display the entire customer table.
+select * from cust24;
+
+Q9) Retrieve first name and area of customers.
+select fname, area from cust24;
+
+Q10) List distinct movie types.
+select distinct type from movie24;
+
+
+--------------------------------------------------
+Practical 2 – MongoDB Basic Operations
+--------------------------------------------------
+Q1) Create and drop databases in MongoDB.
+use College
+db.dropDatabase()
+
+Q2) Create, display, and drop collections.
+db.createCollection("Teachers")
+show collections
+db.Teachers.drop()
+
+Q3) Insert, update, and delete documents.
+db.Student.insertMany([
+  { rollno:10306, name:"Priyanka", address:"Panvel"},
+  { rollno:10307, name:"Alice", address:"Vashi"},
+  { rollno:10308, name:"Shondita", address:"Kharghar"}
+])
+
+db.Student.update({ rollno:10306 }, { $set: { address:"New Panvel" } })
+db.Student.deleteOne({ name:"Shondita" })
+
+Q4) Use sum, avg, min, and max expressions.
+db.train.insertMany([
+  { id: 1, train_name: "Express 101", class: "first_class", fare: 1000 },
+  { id: 1, train_name: "Express 101", class: "first_class", fare: 1200 },
+  { id: 2, train_name: "Express 102", class: "second_class", fare: 800 },
+  { id: 2, train_name: "Express 102", class: "first_class", fare: 1500 },
+  { id: 3, train_name: "Express 103", class: "second_class", fare: 700 }
+])
+
+db.train.aggregate([{ $match:{ class:"first_class" }}, { $group:{ _id:"$id", total:{$sum:"$fare"} } }])
+db.train.aggregate([{ $group:{ _id:"$id", total:{$avg:"$fare"} } }])
+db.train.aggregate([{ $group:{ _id:"$id", total:{$max:"$fare"} } }])
+db.train.aggregate([{ $group:{ _id:"$id", total:{$min:"$fare"} } }])
+
+Q5) Use push and addToSet operators.
+db.myCollection.insertOne({ name:"John", hobbies:["reading","coding"] })
+db.myCollection.updateOne({ name:"John" }, { $push:{ hobbies:"sports" } })
+db.myCollection.updateOne({ name:"John" }, { $addToSet:{ hobbies:"swimming" } })
+
+Q6) Use first and last expressions.
+db.myCollection.insertMany([
+  { name:"Alice", age:25, joined:new Date("2020-01-15") },
+  { name:"Bob", age:30, joined:new Date("2021-03-10") },
+  { name:"Charlie", age:35, joined:new Date("2019-07-20") },
+  { name:"David", age:40, joined:new Date("2018-11-05") },
+  { name:"Eve", age:45, joined:new Date("2022-08-17") }
+])
+
+db.myCollection.aggregate([{ $sort:{ age:1 } }, { $group:{ _id:null, firstPersonByAge:{ $first:"$name" } } }])
+db.myCollection.aggregate([{ $sort:{ age:1 } }, { $group:{ _id:null, lastPerson:{ $last:"$age" } } }])
+
+
+--------------------------------------------------
+Practical 3 – MongoDB Replication, Backup, and Restore
+--------------------------------------------------
+Q1) Create a replica set in MongoDB.
+mongod --port 27017 --dbpath "C:\mongodb\rs1\data\db" --replSet rs0
+mongod --port 27018 --dbpath "C:\mongodb\rs2\data\db" --replSet rs0
+mongod --port 27019 --dbpath "C:\mongodb\rs3\data\db" --replSet rs0
+
+rs.initiate({
+  _id: "rs0",
+  members: [
+    { _id: 0, host: "localhost:27017" },
+    { _id: 1, host: "localhost:27018" },
+    { _id: 2, host: "localhost:27019" }
+  ]
+})
+
+Q2) Take a backup of a database using mongodump.
+mongodump --db mydb --out "C:\backup"
+
+Q3) Restore the database using mongorestore.
+mongorestore --db mydb "C:\backup\mydb"
+
+
+--------------------------------------------------
+Practical 4 – MongoDB with Java/Python/R
+--------------------------------------------------
+Q1) Write a Java program to insert data into MongoDB.
+(Example using MongoDB Java Driver)
+
+import com.mongodb.client.*;
+import org.bson.Document;
+public class InsertExample {
+  public static void main(String[] args) {
+    MongoClient client = MongoClients.create("mongodb://localhost:27017");
+    MongoDatabase db = client.getDatabase("college");
+    MongoCollection<Document> col = db.getCollection("students");
+    Document doc = new Document("rollno",101).append("name","Chinmay");
+    col.insertOne(doc);
+    System.out.println("Inserted Successfully");
+  }
+}
+
+Q2) Write a Java program to update a MongoDB document.
+col.updateOne(new Document("rollno",101), new Document("$set", new Document("name","Rohan")));
+
+Q3) Write a Java program to delete a MongoDB document.
+col.deleteOne(new Document("rollno",101));
+
+(Similar code can be written in Python using pymongo, or in R using mongolite.)
+
+
+--------------------------------------------------
+Practical 5 – Cassandra Data Model
+--------------------------------------------------
+Q1) Create a keyspace in Cassandra.
+CREATE KEYSPACE pillai WITH replication={'class':'SimpleStrategy','replication_factor':3};
+
+Q2) Alter the keyspace replication factor.
+ALTER KEYSPACE pillai WITH replication={'class':'SimpleStrategy','replication_factor':4};
+
+Q3) Drop a keyspace.
+DROP KEYSPACE pillai;
+
+Q4) Create a table.
+CREATE TABLE emp(
+  emp_id int PRIMARY KEY,
+  emp_name text,
+  emp_city text,
+  emp_sal varint,
+  emp_phone varint
+);
+
+Q5) Alter table to add and drop a column.
+ALTER TABLE emp ADD emp_email text;
+ALTER TABLE emp DROP emp_email;
+
+Q6) Insert data into a table.
+INSERT INTO emp(emp_id, emp_name, emp_city, emp_sal, emp_phone)
+VALUES (1, 'John', 'Mumbai', 50000, 9876543210);
+
+
+--------------------------------------------------
+Practical 6 – Java with Cassandra
+--------------------------------------------------
+Q1) Write a Java program to insert data into Cassandra.
+(Example using DataStax Java Driver)
+
+import com.datastax.oss.driver.api.core.*;
+public class CassandraInsert {
+  public static void main(String[] args){
+    CqlSession session = CqlSession.builder().build();
+    session.execute("INSERT INTO emp (emp_id, emp_name) VALUES (2, 'Alice')");
+    System.out.println("Inserted Successfully");
+    session.close();
+  }
+}
+
+Q2) Write a Java program to update data in Cassandra.
+session.execute("UPDATE emp SET emp_city='Delhi' WHERE emp_id=2");
+
+Q3) Write a Java program to retrieve data from Cassandra.
+ResultSet rs = session.execute("SELECT * FROM emp");
+for (Row row : rs) {
+  System.out.println(row.getInt("emp_id")+" "+row.getString("emp_name"));
+}
+
+Q4) Write a Java program to delete data in Cassandra.
+session.execute("DELETE FROM emp WHERE emp_id=2");
+
+
+--------------------------------------------------
+Practical 7 – CouchDB Operations
+--------------------------------------------------
+Q1) List all databases in CouchDB using cURL.
+curl -X GET http://admin:123@127.0.0.1:5984/_all_dbs
+
+Q2) Create a database in CouchDB.
+curl -X PUT http://admin:123@127.0.0.1:5984/mydb
+
+Q3) Delete a database in CouchDB.
+curl -X DELETE http://admin:123@127.0.0.1:5984/mydb
+
+Q4) Insert a document in CouchDB.
+curl -X POST http://admin:123@127.0.0.1:5984/mydb -H "Content-Type: application/json" -d '{"name":"Chinmay","city":"Mumbai"}'
+
+
+--------------------------------------------------
+Practical 8 – Java with CouchDB
+--------------------------------------------------
+Q1) Write a Java program to insert a document in CouchDB using Ektorp.
+
+import org.ektorp.*;
+import org.ektorp.http.*;
+import org.ektorp.impl.*;
+public class CouchDBInsert {
+  public static void main(String[] args){
+    HttpClient httpClient = new StdHttpClient.Builder().url("http://127.0.0.1:5984").build();
+    CouchDbConnector db = new StdCouchDbConnector("mydb", new StdCouchDbInstance(httpClient));
+    db.createDatabaseIfNotExists();
+    Map<String,Object> doc = new HashMap<>();
+    doc.put("name","Chinmay");
+    db.create(doc);
+    System.out.println("Document inserted successfully");
+  }
+}
+
+Q2) Write a Java program to retrieve a document from CouchDB.
+Map<String,Object> document = db.get(Map.class,"<doc_id>");
+System.out.println(document);
+
+Q3) Write a Java program to delete a document from CouchDB.
+db.delete(document);
