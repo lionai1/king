@@ -1,0 +1,1205 @@
+--------------------------------------------------
+                      SQL
+--------------------------------------------------
+
+1. Database & Table Operations.
+
+-- Create Database
+CREATE DATABASE College;
+
+-- Use Database
+USE College;
+
+-- Drop Database
+DROP DATABASE College;
+
+-- Create Table
+CREATE TABLE Students (
+    RollNo INT PRIMARY KEY,
+    Name VARCHAR(50),
+    Age INT,
+    Course VARCHAR(30)
+);
+
+-- Drop Table
+DROP TABLE Students;
+
+-- Alter Table (Add Column)
+ALTER TABLE Students ADD Email VARCHAR(50);
+
+-- Alter Table (Modify Column)
+ALTER TABLE Students MODIFY Age INT NOT NULL;
+
+-- Alter Table (Drop Column)
+ALTER TABLE Students DROP COLUMN Email;
+
+________________________________________________________________________________________________
+
+2. CRUD Operations
+
+-- Insert
+INSERT INTO Students (RollNo, Name, Age, Course)
+VALUES (1, 'Ganesh', 21, 'B.Sc IT');
+
+-- Read (Select)
+SELECT * FROM Students;
+
+-- Update
+UPDATE Students SET Course = 'M.Sc IT' WHERE RollNo = 1;
+
+-- Delete
+DELETE FROM Students WHERE RollNo = 1;
+
+_________________________________________________________________________________________________
+
+3. Clauses
+
+-- WHERE
+SELECT * FROM Students WHERE Age > 20;
+
+-- DISTINCT
+SELECT DISTINCT Course FROM Students;
+
+-- ORDER BY
+SELECT * FROM Students ORDER BY Age DESC;
+
+-- LIMIT
+SELECT * FROM Students LIMIT 5;
+
+-- BETWEEN
+SELECT * FROM Students WHERE Age BETWEEN 18 AND 25;
+
+-- IN
+SELECT * FROM Students WHERE Course IN ('B.Sc IT', 'BCA');
+
+-- LIKE
+SELECT * FROM Students WHERE Name LIKE 'G%';
+
+-- IS NULL
+SELECT * FROM Students WHERE Email IS NULL;
+
+__________________________________________________________________________________________________________
+
+4. Aggregate Functions
+
+-- COUNT
+SELECT COUNT(*) FROM Students;
+
+-- SUM
+SELECT SUM(Age) FROM Students;
+
+-- AVG
+SELECT AVG(Age) FROM Students;
+
+-- MIN & MAX
+SELECT MIN(Age), MAX(Age) FROM Students;
+
+____________________________________________________________________________________________________________
+
+5. GROUP BY & HAVING
+
+-- GROUP BY
+SELECT Course, COUNT(*) AS StudentCount 
+FROM Students 
+GROUP BY Course;
+
+-- HAVING
+SELECT Course, COUNT(*) AS StudentCount
+FROM Students
+GROUP BY Course
+HAVING COUNT(*) > 2;
+
+____________________________________________________________________________________________________________
+
+6. Joins
+
+-- Inner Join
+SELECT Students.Name, Marks.Subject, Marks.Score
+FROM Students
+INNER JOIN Marks ON Students.RollNo = Marks.RollNo;
+
+-- Left Join
+SELECT Students.Name, Marks.Subject, Marks.Score
+FROM Students
+LEFT JOIN Marks ON Students.RollNo = Marks.RollNo;
+
+-- Right Join
+SELECT Students.Name, Marks.Subject, Marks.Score
+FROM Students
+RIGHT JOIN Marks ON Students.RollNo = Marks.RollNo;
+
+-- Full Join (some DBs like MySQL don’t support directly, use UNION)
+SELECT Students.Name, Marks.Subject, Marks.Score
+FROM Students
+LEFT JOIN Marks ON Students.RollNo = Marks.RollNo
+UNION
+SELECT Students.Name, Marks.Subject, Marks.Score
+FROM Students
+RIGHT JOIN Marks ON Students.RollNo = Marks.RollNo;
+
+-- Self Join
+SELECT A.Name AS Student1, B.Name AS Student2
+FROM Students A, Students B
+WHERE A.Course = B.Course AND A.RollNo <> B.RollNo;
+
+________________________________________________________________________________________________________________
+
+7. Subqueries
+
+-- Single Row Subquery
+SELECT * FROM Students WHERE Age = (SELECT MAX(Age) FROM Students);
+
+-- Multiple Row Subquery
+SELECT * FROM Students WHERE Course IN (SELECT DISTINCT Course FROM Students);
+
+________________________________________________________________________________________________________________
+
+8. Views
+
+-- Create View
+CREATE VIEW StudentView AS
+SELECT Name, Course FROM Students;
+
+-- Select from View
+SELECT * FROM StudentView;
+
+-- Drop View
+DROP VIEW StudentView;
+
+_________________________________________________________________________________________________________________
+
+
+--------------------------------
+       MongoDB
+--------------------------------
+1) Create & Drop Databases
+
+// Switch to a database (creates it when you insert the first document)
+use collegeDB
+
+// Show current database
+db
+
+// Show all databases
+show dbs
+
+// To drop current database
+db.dropDatabase()
+
+// Drop database by switching then drop
+use tempDB
+db.dropDatabase()
+
+-----------------------------------------------------
+2) Create, Display & Drop Collections
+
+// Create a collection explicitly
+db.createCollection("students")
+
+// Insert auto-creates the collection too
+db.students.insertOne({roll:1, name:"Ganesh", age:21, course:"BSc IT"})
+
+// Show collections in current DB
+show collections
+
+// Get collection stats
+db.students.stats()
+
+// Drop a collection
+db.students.drop()
+
+---------------------------------------------------------
+3) Insert, Query, Update & Delete Documents (CRUD)
+
+db.students.insertMany([
+  { roll: 1, name: "Ganesh", age: 21, course: "BSc IT", marks: [70,85], subjects: ["DBMS","OS"] },
+  { roll: 2, name: "Priya",  age: 20, course: "BSc IT", marks: [90,88], subjects: ["DBMS","Java"] },
+  { roll: 3, name: "Ramesh", age: 22, course: "BCA", marks: [60,75], subjects: ["Networking","DBMS"] },
+  { roll: 4, name: "Seema",  age: 21, course: "BSc IT", marks: [95,93], subjects: ["Java","OS"] }
+])
+
+Query (Find)
+// All documents
+db.students.find().pretty()
+
+// Specific fields only (projection)
+db.students.find({}, {name:1, course:1, _id:0})
+
+// Where
+db.students.find({ age: { $gt: 20 } })
+
+// Find one
+db.students.findOne({ roll: 2 })
+
+// Query nested/array elements
+db.students.find({ marks: { $elemMatch: { $gt: 90 } } })
+db.students.find({ subjects: "DBMS" })  // membership in array
+
+
+
+Update
+// Update one document (set field)
+db.students.updateOne({ roll: 1 }, { $set: { email: "ganesh@example.com" } })
+
+// Update many (increment)
+db.students.updateMany({ course: "BSc IT" }, { $inc: { extraCredit: 2 } })
+
+// Push into an array
+db.students.updateOne({ roll: 3 }, { $push: { marks: 80 } })
+
+// AddToSet (prevent duplicates)
+db.students.updateOne({ roll: 3 }, { $addToSet: { subjects: "DBMS" } })
+
+// Replace entire document
+db.students.replaceOne({ roll: 4 }, { roll:4, name:"Seema", age:21, course:"MSc IT" })
+
+
+Delete
+// Delete one
+db.students.deleteOne({ roll: 2 })
+
+// Delete many
+db.students.deleteMany({ course: "BCA" })
+
+// Remove all documents (same as deleteMany({}))
+db.students.deleteMany({})
+
+---------------------------------------------------------------------
+
+4) Aggregation: sum, avg, min, max
+
+Example: total marks per student (sum of marks array)
+db.students.aggregate([
+  { $project: {
+      roll: 1,
+      name: 1,
+      totalMarks: { $sum: "$marks" }    // SUM of array elements
+  }}
+])
+
+
+// Suppose we have a "score" field or want aggregated by course:
+db.students.aggregate([
+  { $unwind: "$marks" },   // create entry per mark value (if marks is array)
+  { $group: {
+      _id: "$course",
+      totalMarks: { $sum: "$marks" },
+      avgMark: { $avg: "$marks" },
+      minMark: { $min: "$marks" },
+      maxMark: { $max: "$marks" },
+      count: { $sum: 1 }
+  }},
+  { $sort: { totalMarks: -1 } }
+])
+
+
+Aggregate on scalar fields (e.g., age)
+db.students.aggregate([
+  { $group: {
+      _id: null,
+      averageAge: { $avg: "$age" },
+      minAge: { $min: "$age" },
+      maxAge: { $max: "$age" },
+      totalStudents: { $sum: 1 }
+  }}
+])
+
+
+---------------------------------------------------------------------------
+5) Use $push and $addToSet (in updates or aggregation)
+
+// $push: always adds (can use $each, $slice, $sort)
+db.students.updateOne({ roll: 1 }, { $push: { marks: 88 } })
+db.students.updateOne({ roll: 1 }, { $push: { marks: { $each: [78,82] } } })
+
+// $addToSet: adds only if not present
+db.students.updateOne({ roll: 1 }, { $addToSet: { subjects: "Maths" } })
+
+
+In aggregation pipeline ($push used inside $group to collect items)
+db.students.aggregate([
+  { $group: {
+      _id: "$course",
+      students: { $push: { roll: "$roll", name: "$name" } },  // collect docs into array
+      uniqueSubjects: { $addToSet: "$subjects" }              // addToSet inside group produces arrays of arrays
+  }}
+])
+
+// To flatten uniqueSubjects (because subjects was an array), you may need $unwind then $addToSet:
+db.students.aggregate([
+  { $unwind: "$subjects" },
+  { $group: {
+      _id: "$course",
+      uniqueSubjects: { $addToSet: "$subjects" }
+  }}
+])
+
+
+----------------------------------------------------------------------------------
+
+6) Use $first and $last (aggregation)
+
+
+Example: get the student with highest age per course
+db.students.aggregate([
+  { $sort: { course: 1, age: -1 } },   // sort by course asc, age desc -> oldest first per course
+  { $group: {
+      _id: "$course",
+      oldestName: { $first: "$name" },
+      oldestAge: { $first: "$age" },
+      youngestName: { $last: "$name" },
+      youngestAge: { $last: "$age" }
+  }}
+])
+
+
+Example: first and last mark (after sorting marks)
+db.students.aggregate([
+  { $project: {
+      name: 1,
+      sortedMarks: { $slice: [ { $sortArray: { input: "$marks", sortBy: 1 } }, 0, 100 ] } 
+      // $sortArray requires MongoDB 5.2+. If not available, use $unwind approach.
+  }},
+  { $project: {
+      name: 1,
+      firstMark: { $arrayElemAt: ["$sortedMarks", 0] },
+      lastMark: { $arrayElemAt: ["$sortedMarks", -1] }
+  }}
+])
+
+
+If $sortArray not available, use:
+db.students.aggregate([
+  { $unwind: "$marks" },
+  { $sort: { "marks": 1 } },
+  { $group: {
+      _id: "$roll",
+      firstMark: { $first: "$marks" },
+      lastMark: { $last: "$marks" }
+  }}
+])
+
+
+------------------------------------------------------------------------------
+Useful Misc. Aggregation examples (common exam tasks)
+
+Top N students by total marks
+db.students.aggregate([
+  { $project: { name:1, total: { $sum: "$marks" } } },
+  { $sort: { total: -1 } },
+  { $limit: 3 }
+])
+
+
+Average total marks per course
+db.students.aggregate([
+  { $project: { course:1, total: { $sum: "$marks" } } },
+  { $group: { _id: "$course", avgTotal: { $avg: "$total" } } }
+])
+
+
+Count students per course
+db.students.aggregate([
+  { $group: { _id: "$course", count: { $sum: 1 } } }
+])
+
+_______________________________________________________________________________________________________________
+
+-----------------------------------------------------------------------------
+                            CASSANDRA
+------------------------------------------------------------------------------
+1) Keyspace Operations
+
+-- Create a Keyspace
+CREATE KEYSPACE college
+WITH REPLICATION = {
+  'class': 'SimpleStrategy',
+  'replication_factor': 1
+};
+
+-- Use a Keyspace
+USE college;
+
+-- Alter Keyspace (change replication factor)
+ALTER KEYSPACE college
+WITH REPLICATION = {
+  'class': 'SimpleStrategy',
+  'replication_factor': 2
+};
+
+-- Drop Keyspace
+DROP KEYSPACE college;
+
+--------------------------------------
+
+
+2) Table Operations
+
+-- Create Table
+CREATE TABLE students (
+  rollno int PRIMARY KEY,
+  name text,
+  age int,
+  course text,
+  marks list<int>,         -- collection type
+  subjects set<text>       -- collection type
+);
+
+-- Show Tables
+DESCRIBE TABLES;
+
+-- Alter Table (Add column)
+ALTER TABLE students ADD email text;
+
+-- Alter Table (Rename column)
+ALTER TABLE students RENAME course TO program;
+
+-- Drop Column
+ALTER TABLE students DROP email;
+
+-- Drop Table
+DROP TABLE students;
+
+----------------------------------------------
+
+3) CRUD Operations
+
+Insert
+
+INSERT INTO students (rollno, name, age, course, marks, subjects)
+VALUES (1, 'Ganesh', 21, 'BSc IT', [80, 85, 90], {'DBMS','OS'});
+
+
+Select
+
+-- Select all
+SELECT * FROM students;
+
+-- Select specific fields
+SELECT name, course FROM students;
+
+-- With WHERE (Note: Cassandra requires filtering on PRIMARY KEY/INDEX columns)
+SELECT * FROM students WHERE rollno = 1;
+
+
+Update
+
+-- Update single field
+UPDATE students SET age = 22 WHERE rollno = 1;
+
+-- Update collection (append to list)
+UPDATE students SET marks = marks + [95] WHERE rollno = 1;
+
+-- Update collection (add to set)
+UPDATE students SET subjects = subjects + {'Java'} WHERE rollno = 1;
+
+
+Delete
+
+-- Delete entire row
+DELETE FROM students WHERE rollno = 1;
+
+-- Delete a column
+DELETE age FROM students WHERE rollno = 1;
+
+---------------------------------------------------
+4) Cassandra CQL Types
+
+
+CREATE TABLE demo_types (
+  id int PRIMARY KEY,
+  name text,
+  salary decimal,
+  joining_date timestamp,
+  is_active boolean,
+  hobbies list<text>,       -- List (allows duplicates, maintains order)
+  skills set<text>,         -- Set (unique values, no order)
+  grades map<text, int>     -- Map (key-value pairs)
+);
+
+-- Insert example
+INSERT INTO demo_types (id, name, salary, joining_date, is_active, hobbies, skills, grades)
+VALUES (101, 'Priya', 50000.50, toTimestamp(now()), true, ['reading','music'],
+
+
+______________________________________________________________________________________________________________
+
+1) Basic DB operations (create / list / delete / info)
+
+Create a database
+
+# create DB named "students"
+curl -X PUT http://admin:password@localhost:5984/students
+
+--------------------------------
+List all databases
+
+curl http://admin:password@localhost:5984/_all_dbs
+
+-------------------------------------
+Get DB info / stats
+
+curl http://admin:password@localhost:5984/students
+# returns DB metadata (doc_count, update_seq, sizes...)
+
+-----------------------------------------
+Delete a database
+
+curl -X DELETE http://admin:password@localhost:5984/students
+
+-----------------------------------------
+
+Check CouchDB server welcome
+
+curl http://admin:password@localhost:5984/
+# shows version and UUID
+------------------------------------------------------------------------------------------------------------------
+
+2) Working with documents — create, read, update, delete (CRUD)
+
+Create a document (POST — server assigns id)
+
+curl -X POST http://admin:password@localhost:5984/students \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Ganesh","age":21,"course":"BSc IT"}'
+
+---------------------------------------------------------
+
+Create / Put document with a chosen id
+
+curl -X PUT http://admin:password@localhost:5984/students/roll_1 \
+  -H "Content-Type: application/json" \
+  -d '{"roll":1,"name":"Ganesh","age":21,"course":"BSc IT"}'
+
+------------------------------------------------------------------
+
+Read (GET) a document
+
+curl http://admin:password@localhost:5984/students/roll_1
+# returns JSON including _id and _rev
+
+--------------------------------------------------------------------
+
+Update a document (must include current _rev)
+
+Update:
+
+curl -X PUT http://admin:password@localhost:5984/students/roll_1 \
+  -H "Content-Type: application/json" \
+  -d '{"_id":"roll_1","_rev":"1-xxxxx","roll":1,"name":"Ganesh S","age":22}'
+
+----------------------------------------------------------------------------------
+
+Partial update (PATCH-like) — read, modify fields, then PUT the whole doc.
+
+Delete a document (need latest _rev)
+
+curl -X DELETE "http://admin:password@localhost:5984/students/roll_1?rev=1-xxxxx"
+
+-----------------------------------------------------------------------------
+
+Bulk insert / update
+
+curl -X POST http://admin:password@localhost:5984/students/_bulk_docs \
+  -H "Content-Type: application/json" \
+  -d '{"docs":[ {"_id":"roll_2","name":"Priya"}, {"_id":"roll_3","name":"Ramesh"} ] }'
+
+-------------------------------------------------------------------------------
+
+Get multiple docs by id
+
+curl -X POST http://admin:password@localhost:5984/students/_all_docs?include_docs=true \
+  -H "Content-Type: application/json" -d '{"keys":["roll_1","roll_2"]}'
+
+---------------------------------------------------------------------------------
+
+All docs (list)
+
+curl http://admin:password@localhost:5984/students/_all_docs
+# use ?include_docs=true to get full docs
+
+-----------------------------------------------------------------------------------------------------------------
+
+3) Querying documents
+
+Using _all_docs (by id)
+
+curl http://admin:password@localhost:5984/students/_all_docs?include_docs=true
+
+---------------------------------
+
+Mango Query (_find) — declarative JSON queries (like Mongo)
+
+# create an index on "course" first
+curl -X POST http://admin:password@localhost:5984/students/_index \
+  -H "Content-Type: application/json" \
+  -d '{"index": {"fields":["course"]}, "name":"course-index", "type":"json"}'
+
+# find docs
+curl -X POST http://admin:password@localhost:5984/students/_find \
+  -H "Content-Type: application/json" \
+  -d '{"selector": {"course": "BSc IT", "age": {"$gt": 20}}, "fields":["_id","name","age"] }'
+
+----------------------------------------
+
+View / Map-Reduce queries (design docs)
+
+# create a design doc with a map function (example: map students by course)
+curl -X PUT http://admin:password@localhost:5984/students/_design/courseViews \
+  -H "Content-Type: application/json" \
+  -d '{
+    "_id":"_design/courseViews",
+    "views": {
+      "by_course": {
+        "map": "function(doc) { if(doc.course) emit(doc.course, doc.name); }"
+      }
+    }
+  }'
+
+# query the view
+curl http://admin:password@localhost:5984/students/_design/courseViews/_view/by_course
+
+-----------------------------------------
+
+Query with reduce (count students per course)
+
+# map emits (course, 1), reduce uses _count
+# if view configured with reduce, call ?group=true
+curl "http://admin:password@localhost:5984/students/_design/courseViews/_view/by_course?group=true"
+
+-------------------------------------------------------------------------------------------------------------------
+
+4) Attachments (attach files to docs)
+
+Add an attachment to a document (PUT attachment)
+
+If doc exists with _rev, use:
+
+curl -X PUT "http://admin:password@localhost:5984/students/roll_1/photo.jpg?rev=1-xxxxx" \
+  -H "Content-Type: image/jpeg" \
+  --data-binary @/path/to/photo.jpg
+
+
+If doc does not exist, create doc and then PUT attachment (or use multipart).
+-----------------------------------
+
+Get attachment
+
+curl -O http://admin:password@localhost:5984/students/roll_1/photo.jpg
+
+------------------------------------
+Delete an attachment
+
+curl -X DELETE "http://admin:password@localhost:5984/students/roll_1/photo.jpg?rev=1-xxxxx"
+
+-----------------------------------------
+
+Add attachment using multipart/form-data (create doc + attachment in one request)
+
+curl -X POST http://admin:password@localhost:5984/students \
+  -F "metadata={\"roll\":10,\"name\":\"Rita\"};type=application/json" \
+  -F "file=@/path/to/file.pdf;type=application/pdf"
+
+
+------------------------------------------------------------------------------------------------------------------
+
+5) Security / Admin / Config tips (common viva points)
+CouchDB runs on port 5984 by default.
+
+Admin user required for writes if security enabled: http://admin:password@...
+
+CouchDB uses MVCC — every update produces new _rev. You must supply _rev for updates/deletes.
+
+Attachments are stored inside the document (or as separate files internally) — they increase doc size.
+
+Use Fauxton (CouchDB web UI) at http://localhost:5984/_utils/ to visually manage DBs, docs, attachments, and design docs.
+
+For production, enable HTTPS and proper CORS.
+
+-------------------------------------------------------------------------------------------------------------------
+
+
+6) Example Node.js (fetch) quick snippets
+
+Create a doc (node fetch)
+
+// needs node-fetch or native fetch in newer Node
+await fetch('http://admin:password@localhost:5984/students', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ roll:1, name:'Ganesh' })
+});
+
+--------------------------------------
+
+Upload attachment (node fetch, binary)
+
+const fs = require('fs');
+const data = fs.readFileSync('./photo.jpg');
+const res = await fetch('http://admin:password@localhost:5984/students/roll_1/photo.jpg?rev=1-xxxxx', {
+  method: 'PUT',
+  headers: { 'Content-Type': 'image/jpeg' },
+  body: data
+});
+
+------------------------------------------------------------------------------------------------------------------
+
+7) Useful commands to run in practical (copy-paste checklist)
+
+Create DB: PUT /students
+
+Insert doc: POST /students or PUT /students/roll_1
+
+Read doc: GET /students/roll_1
+
+Update doc: fetch -> modify -> PUT /students/roll_1 with _rev
+
+Add attachment: PUT /students/roll_1/photo.jpg?rev=... with binary data
+
+List all docs: GET /students/_all_docs?include_docs=true
+
+Mango query: POST /students/_find
+
+Create view: PUT /students/_design/... then GET /.../_view/...
+
+Delete doc: DELETE /students/roll_1?rev=...
+
+Drop DB: DELETE /students
+
+-----------------------------------------------------------------------------------------------------------------
+
+8) Common viva questions (short answers)
+
+Q: Where does CouchDB store documents?
+A: As JSON documents addressed by _id inside a database; attachments are binary inside docs.
+
+Q: What is _rev?
+A: Revision token used for MVCC; required to update/delete.
+
+Q: How do you query by field?
+A: Use Mango _find queries (prefer indexed fields) or create map-reduce views.
+
+Q: How to attach a file?
+A: Use HTTP PUT to /{db}/{docid}/{attachmentname}?rev={rev} with appropriate Content-Type.
+
+Q: Difference between _all_docs and _find?
+A: _all_docs lists docs by id. _find performs JSON selection on fields (needs indexes for speed).
+
+-----------------------------------------------------------------------------------------------------------------
+
+
+--------------------------------------------------
+                     NEO4J
+--------------------------------------------------
+
+1) Neo4j CQL Basics
+
+Check connection
+
+:server connect
+
+
+Create a node
+
+CREATE (s:Student {roll:1, name:'Ganesh', age:21, course:'BSc IT'});
+CREATE (s:Student {roll:2, name:'Priya', age:20, course:'BSc IT'});
+CREATE (s:Student {roll:3, name:'Ramesh', age:22, course:'BCA'});
+
+
+Create relationship
+
+MATCH (s1:Student {name:'Ganesh'}), (s2:Student {name:'Priya'})
+CREATE (s1)-[:FRIEND_OF]->(s2);
+
+
+Display all nodes & relations
+
+MATCH (n) RETURN n;
+MATCH (a)-[r]->(b) RETURN a,r,b;
+
+
+
+------------------------------------
+
+2) CRUD in Neo4j
+
+Create (INSERT equivalent)
+
+CREATE (c:Course {id:101, name:'DBMS'});
+CREATE (c:Course {id:102, name:'OS'});
+
+
+Read (SELECT equivalent)
+
+-- Get all students
+MATCH (s:Student) RETURN s;
+
+-- Project specific properties
+MATCH (s:Student) RETURN s.name, s.course;
+
+-- With condition
+MATCH (s:Student) WHERE s.age > 20 RETURN s.name, s.age;
+
+-- With relationship
+MATCH (s:Student)-[:ENROLLED_IN]->(c:Course)
+RETURN s.name, c.name;
+
+
+Update
+
+-- Update property
+MATCH (s:Student {roll:1})
+SET s.age = 22;
+
+-- Add new property
+MATCH (s:Student {name:'Priya'})
+SET s.email = 'priya@example.com';
+
+-- Rename label (not direct, workaround: copy → delete)
+MATCH (s:Student {name:'Ramesh'})
+REMOVE s.course
+SET s.program = 'MCA';
+
+
+Delete
+
+-- Delete a property
+MATCH (s:Student {roll:1})
+REMOVE s.email;
+
+-- Delete a relationship
+MATCH (s:Student {name:'Ganesh'})-[r:FRIEND_OF]->(s2:Student {name:'Priya'})
+DELETE r;
+
+-- Delete a node (must not have relationships)
+MATCH (s:Student {name:'Ramesh'}) DELETE s;
+
+-- Delete with relationships
+MATCH (s:Student {name:'Ganesh'}) DETACH DELETE s;
+
+
+-----------------------------------------------------------------------
+
+
+3) Aggregate Functions in Neo4j
+
+Count
+
+MATCH (s:Student) RETURN COUNT(s) AS totalStudents;
+
+
+Min / Max
+
+MATCH (s:Student) RETURN MIN(s.age) AS youngest, MAX(s.age) AS oldest;
+
+
+Average
+
+MATCH (s:Student) RETURN AVG(s.age) AS avgAge;
+
+
+Sum
+
+MATCH (s:Student) RETURN SUM(s.age) AS totalAge;
+
+
+Group by (using RETURN with property)
+
+MATCH (s:Student)
+RETURN s.course, COUNT(*) AS countPerCourse;
+
+
+
+-------------------------------------------------------------------------------
+
+
+
+4) Clauses in Neo4j
+
+WHERE
+
+MATCH (s:Student) WHERE s.age > 20 RETURN s.name, s.age;
+
+
+ORDER BY
+
+MATCH (s:Student) RETURN s.name, s.age ORDER BY s.age DESC;
+
+
+LIMIT & SKIP
+
+MATCH (s:Student) RETURN s.name, s.course LIMIT 2;
+MATCH (s:Student) RETURN s.name, s.course SKIP 1 LIMIT 2;
+
+
+WITH (pipeline)
+
+MATCH (s:Student)
+WITH s.course AS course, COUNT(*) AS total
+WHERE total > 1
+RETURN course, total;
+
+
+RETURN
+
+MATCH (s:Student)-[:ENROLLED_IN]->(c:Course)
+RETURN s.name, c.name;
+
+
+OPTIONAL MATCH (like LEFT JOIN)
+
+MATCH (s:Student)
+OPTIONAL MATCH (s)-[:ENROLLED_IN]->(c:Course)
+RETURN s.name, c.name;
+
+
+-----------------------------------------------------------------------------------------------------
+
+
+
+1) Insert Documents (Create)
+// Insert One
+db.students.insertOne({
+  roll: 1, name: "Ganesh", age: 21, course: "BSc IT", marks: 85, subjects: ["DBMS","OS"]
+});
+
+// Insert Many
+db.students.insertMany([
+  { roll: 2, name: "Priya", age: 20, course: "BSc IT", marks: 92, subjects: ["Java","DBMS"] },
+  { roll: 3, name: "Ramesh", age: 23, course: "BCA", marks: 75, subjects: ["Networking","OS"] },
+  { roll: 4, name: "Seema", age: 22, course: "BSc IT", marks: 95, subjects: ["Java","OS"] }
+]);
+
+
+
+-----------------------------------------------
+
+
+
+2) Query Operators (Read)
+Comparison Operators
+// Equal to
+db.students.find({ age: { $eq: 21 } });
+
+// Greater than
+db.students.find({ marks: { $gt: 80 } });
+
+// Greater than or equal
+db.students.find({ marks: { $gte: 90 } });
+
+// Less than
+db.students.find({ age: { $lt: 22 } });
+
+// Between range
+db.students.find({ age: { $gte: 20, $lte: 22 } });
+
+------------------------------------
+
+Logical Operators
+// AND
+db.students.find({ $and: [ { age: { $gt: 20 } }, { course: "BSc IT" } ] });
+
+// OR
+db.students.find({ $or: [ { marks: { $lt: 80 } }, { course: "BCA" } ] });
+
+// NOT
+db.students.find({ marks: { $not: { $gte: 90 } } });
+
+// NOR (neither condition)
+db.students.find({ $nor: [ { course: "BSc IT" }, { age: { $lt: 21 } } ] });
+
+Element Operators
+// Check if field exists
+db.students.find({ email: { $exists: true } });
+
+// Type check (e.g., string, number, array)
+db.students.find({ age: { $type: "int" } });
+
+---------------------------------------------
+
+Array Operators
+// Exact match array
+db.students.find({ subjects: ["DBMS","OS"] });
+
+// Contains element
+db.students.find({ subjects: { $in: ["Java"] } });
+
+// All elements must match
+db.students.find({ subjects: { $all: ["DBMS","OS"] } });
+
+// Match at specific index
+db.students.find({ "subjects.0": "DBMS" });
+
+// Array length = 2
+db.students.find({ subjects: { $size: 2 } });
+
+Evaluation Operators
+// Regex pattern (name starts with P)
+db.students.find({ name: { $regex: "^P" } });
+
+// Expression operator
+db.students.find({ $expr: { $gt: ["$marks", "$age"] } });
+
+-----------------------------------------------------------------------------------------------------------
+
+3) Update Documents
+// Update one (set new value)
+db.students.updateOne(
+  { roll: 1 },
+  { $set: { course: "MSc IT" } }
+);
+
+// Update many (increment)
+db.students.updateMany(
+  { course: "BSc IT" },
+  { $inc: { marks: 2 } }
+);
+
+// Push value into array
+db.students.updateOne(
+  { roll: 2 },
+  { $push: { subjects: "Python" } }
+);
+
+// Add only if not exists (set)
+db.students.updateOne(
+  { roll: 3 },
+  { $addToSet: { subjects: "DBMS" } }
+);
+
+-------------------------------------------------------------------------------------------------
+
+ 4) Delete Documents
+// Delete one
+db.students.deleteOne({ roll: 4 });
+
+// Delete many
+db.students.deleteMany({ course: "BCA" });
+
+// Delete all docs
+db.students.deleteMany({});
+
+-----------------------------------------------------------------------------------------------
+
+5) Aggregation with Operators (Extra for practical)
+// Students grouped by course
+db.students.aggregate([
+  { $group: { _id: "$course", avgMarks: { $avg: "$marks" }, count: { $sum: 1 } } }
+]);
+
+// Students with marks > 90 sorted
+db.students.aggregate([
+  { $match: { marks: { $gt: 90 } } },
+  { $sort: { marks: -1 } }
+]);
+
+
+
+
+__________________________________________________________________________________________________________________
+
+
+1 Using copydb (only works in older MongoDB versions ≤4.0, removed in newer ones)
+
+db.copyDatabase("sourceDB", "targetDB");
+
+
+2) Using Aggregation (clone collections one by one)
+
+db.sourceCollection.aggregate([
+   { $match: {} },         // select all documents
+   { $out: "targetCollection" }  // write into new collection
+]);
+
+Example:
+
+use sourceDB
+db.students.aggregate([{ $match:{} }, { $out:"students_copy" }])
+
+
+3) Using mongodump and mongorestore (recommended in new versions)
+
+# Dump existing DB
+mongodump --db sourceDB --out /backup/path
+
+# Restore into new DB
+mongorestore --db targetDB /backup/path/sourceDB
+
+
+4) Programmatic (clone collections with insertMany)
+
+use targetDB
+db.students.insertMany(
+   db.getSiblingDB("sourceDB").students.find().toArray()
+)
+
+
+✅ Option 1: Dump & Restore (best for full DB copy)
+mongodump --db sourceDB --out /backup
+mongorestore --db targetDB /backup/sourceDB
+
+✅ Option 2: Copy a single collection with aggregation
+use sourceDB
+db.students.aggregate([{ $match: {} }, { $out: "students_copy" }])
+
+✅ Option 3: Copy collection across DBs
+use targetDB
+db.students.insertMany(
+   db.getSiblingDB("sourceDB").students.find().toArray()
+)
+
+
+
+
+Example
+
+Suppose you have a MongoDB database called:
+
+collegeDB → this is your sourceDB (already exists with collections like students, faculty, etc.)
+
+collegeDB_backup → this will be your targetDB (the replica/copy we want to create).
+
+1) If you are on older MongoDB (≤ 4.0)
+db.copyDatabase("collegeDB", "collegeDB_backup");
+
+
+This will copy everything from collegeDB into collegeDB_backup.
+
+---------------------------
+
+2) If you are on new MongoDB (≥ 4.2)
+
+Since db.copyDatabase() is removed, use one of these:
+
+(a) Using mongodump & mongorestore
+# Export sourceDB
+mongodump --db collegeDB --out /backup
+
+# Import into targetDB
+mongorestore --db collegeDB_backup /backup/collegeDB
+
+
+
+(b) Copy one collection from source to target
+use collegeDB_backup
+db.students.insertMany(
+   db.getSiblingDB("collegeDB").students.find().toArray()
+);
+
+
+
+(c) Copy using aggregation $out
+use collegeDB
+db.students.aggregate([
+   { $match: {} },
+   { $out: "students_copy" }
+])
+
+
+
+
+
+
+
+
+
