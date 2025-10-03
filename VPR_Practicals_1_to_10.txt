@@ -1,0 +1,517 @@
+Practical 1: Write a MATLAB program to perform fundamental operations on Image.
+
+clc;
+clear all;
+close all;
+
+a= imread("peppers.png");
+subplot(1,3,1);
+imshow(a);
+title("original image");
+
+b = rgb2gray(a);
+subplot(1,3,2);
+imshow(b);
+title("gray image");
+
+c=im2bw(b);
+subplot(1,3,3);
+imshow(c);
+title("B/W image");
+
+====================================================================================================
+
+Practical 2: Write a MATLAB program to filter images by using point processing in Digital Image.
+
+clc;
+clear all;
+close all;
+
+a = imread("peppers.png");
+subplot(3,3,1);
+imshow(a);
+title("Original Image");
+b = rgb2gray(a);
+subplot(3,3,2);
+imshow(b);
+title("Grayscale Image");
+
+% Image Negative
+[m, n] = size(b);
+c = zeros(m, n, 'uint8');
+for i = 1:m
+    for j = 1:n
+        c(i,j) = 255 - b(i,j);
+    end
+end
+subplot(3,3,3);
+imshow(c);
+title("Negative Image");
+
+% Image Thresholding
+for i = 1:m
+    for j = 1:n
+        if b(i,j) < 128
+            d(i,j) = 0;  
+        else
+            d(i,j) = 255;    
+        end
+    end
+end
+subplot(3,3,4);
+imshow(d);
+title("Threshold Image");
+
+% Slicing without background
+for i = 1:m
+    for j = 1:n
+        if b(i,j) > 80 && b(i,j) < 200
+            e(i,j) = 255;  
+        else
+            e(i,j) = 0;    
+        end
+    end
+end
+subplot(3,3,5);
+imshow(e);
+title("Slicing without BG");
+
+% Slicing with background
+for i = 1:m
+    for j = 1:n
+        if b(i,j) > 100 && b(i,j) < 150
+            f(i,j) = 255;  
+        else
+            f(i,j) = b(i,j);    
+        end
+    end
+end
+subplot(3,3,6);
+imshow(f);
+title("Slicing with BG");
+
+% Dynamic Range Compression
+L = 2^8 - 1;
+g = L / log10(1 + L);
+h = g * log10(1 + double(b));
+subplot(3,3,7);
+imshow(uint8(h));
+title("Dynamic Range Compression");
+
+% Gamma Correction
+gamma = 1.2;
+i = double(b).^(gamma);
+subplot(3,3,8);
+imshow(uint8(i));
+title("Gamma Correction");
+
+% Bitplane Slicing
+figure;
+subplot(3,3,1);
+imshow(b);
+title("Original Image");
+
+for k = 8:-1:1
+    bitplane = bitget(b,k);
+    subplot(3,3,10-k);
+    imshow(logical(bitplane));
+    title(["Bitplane ", num2str(k)]);
+end
+
+====================================================================================================
+
+Practical 3: Write a MATLAB program to filter images by using neighborhood processing in Digital Image.
+
+clc;
+close all;
+clear all;
+
+a = imread("coins.png");
+b = im2gray(a);
+subplot(2,2,1);
+imshow(b);
+title('Original Image');
+
+% Low Pass Filter
+lp = (1/9)*[1 1 1; 1 1 1; 1 1 1];
+[x,y] = size(b);
+for i = 2:x-1
+    for j = 2:y-1
+        LowPass(i,j) = sum(sum(lp .* b(i-1:i+1,j-1:j+1)));
+    end
+end
+subplot(2,2,2);
+imshow(uint8(LowPass));
+title("Low Pass");
+
+% Gaussian Filter
+lp = (1/16)*[1 2 1; 2 4 2; 1 2 1];
+for i = 2:x-1
+    for j = 2:y-1
+        Gauss(i,j) = sum(sum(lp .* b(i-1:i+1,j-1:j+1)));
+    end
+end
+subplot(2,2,3);
+imshow(uint8(Gauss));
+title("Gaussian");
+
+% High Pass Filter
+lp = (1/9)*[-1 -1 -1; -1 8 -1; -1 -1 -1];
+for i = 2:x-1
+    for j = 2:y-1
+        HighPass(i,j) = sum(sum(lp .* b(i-1:i+1,j-1:j+1)));
+    end
+end
+subplot(2,2,4);
+imshow(uint8(HighPass));
+title("High Pass");
+
+====================================================================================================
+
+Practical 4: Write a MATLAB program to perform Histogram Equalization on a given image.
+
+clc;
+close all;
+clear all;
+
+a= imread("peppers.png");
+b= rgb2gray(a);
+imshow(b);
+[m,n]= size(b);
+
+for k=1:256
+    count(k)=0;
+    for i=1:m
+        for j=1:n
+            if b(i,j) == k
+                count(k) = count(k) + 1;
+            end
+        end
+    end
+end
+figure();
+subplot(2,1,1);
+plot(count);
+title("using formula");
+
+c = imhist(b);
+subplot(2,1,2);
+plot(c);
+title("using hist function");
+
+% Histogram Equalization
+d = histeq(b);
+figure();
+subplot(2,2,1);
+plot(c);
+subplot(2,2,3);
+imshow(b);
+title("Original grayscale image");
+subplot(2,2,2);
+imhist(d);
+subplot(2,2,4)
+imshow(d);
+title("Histogram Equalized Image");
+
+====================================================================================================
+
+Practical 5: Write a MATLAB program to perform color extraction from a digital image.
+
+clc;
+clear all;
+close all;
+
+a = imread("peppers.png");
+b = rgb2gray(a);
+c = im2bw(b);
+
+figure();
+subplot(2,3,1); imshow(a); title("Original Image");
+subplot(2,3,2); imshow(b); title("Gray Image");
+subplot(2,3,3); imshow(c); title("B/W Image");
+
+red = a(:,:,1);
+new = zeros(size(red));
+RED   = cat(3, red, new, new);
+subplot(2,3,4); imshow(RED); title("Red Extracted");
+
+green = a(:,:,2);
+GREEN = cat(3, new, green, new);
+subplot(2,3,5); imshow(GREEN); title("Green Extracted");
+
+blue = a(:,:,3);
+BLUE  = cat(3, new, new, blue);
+subplot(2,3,6); imshow(BLUE); title("Blue Extracted");
+
+====================================================================================================
+
+Practical 6: Write a MATLAB program to perform Edge detection using segmentation from a digital image.
+
+close all;
+clc;
+clear all;
+
+a=imread('peppers.png');
+subplot(3,4,1); imshow(a);
+
+b=rgb2gray(a);
+subplot(3,4,2); imshow(b);
+
+b=double(b);
+px=[-1 -1 -1; 0 0 0; 1 1 1];
+py=[-1 0 1; -1 0 1; -1 0 1];
+[m,n]=size(b);
+
+for i=2:m-1
+    for j=2:n-1
+        x_grad(i,j)=sum(sum(px.*b(i-1:i+1,j-1:j+1)));
+        y_grad(i,j)=sum(sum(py.*b(i-1:i+1,j-1:j+1)));
+    end
+end
+
+subplot(3,4,5); imshow(uint8(x_grad));
+subplot(3,4,6); imshow(uint8(y_grad));
+
+prewitt=sqrt(x_grad.^2+y_grad.^2);
+subplot(3,4,7); imshow(uint8(prewitt)); title("Using Prewitt mask");
+
+prewitt_fun=edge(b,"prewitt");
+subplot(3,4,8); imshow(prewitt_fun); title("Using Prewitt Function");
+
+robert_fun=edge(b,"roberts");
+subplot(3,4,9); imshow(robert_fun); title("Roberts Function");
+
+sobel_fun=edge(b,"sobel");
+subplot(3,4,10); imshow(sobel_fun); title("Using Sobel Function");
+
+log_fun=edge(b,"log");
+subplot(3,4,11); imshow(log_fun); title("Log edge detection");
+
+canny_fun=edge(b,"canny");
+subplot(3,4,12); imshow(canny_fun); title("Canny Function");
+
+figure(); imshow(canny_fun);
+
+====================================================================================================
+
+Practical 7: Write a MATLAB program to perform Discrete Fourier Transform (DFT), Discrete Cosine Transform (DCT), and image compression.
+
+close all;
+clc;
+clear all;
+
+a = imread("peppers.png");
+subplot(2,3,1);
+b = rgb2gray(a);
+imshow(b); 
+title("original B/W img")
+
+[m,n] = size(b);
+
+% DFT
+DFT = fft2(b);
+subplot(2,3,2);
+imshow(log(abs(DFT)),[]);  
+title("DFT img")
+
+DFT = DFT(1:3*m/4, 1:3*n/4);
+IDFT = ifft2(DFT);
+subplot(2,3,3);
+imshow(uint8(IDFT));
+title("IDFT img");
+
+% DCT compression
+DCT = dct2(b);
+subplot(2,3,4);
+imshow(log(abs(DCT)),[]); title("DCT img");
+
+% IDCT compression
+DCT = DCT(1:m/2, 1:n/2);
+IDCT = idct2(DCT);
+subplot(2,3,5);
+imshow(uint8(IDCT));
+title("IDCT compressed img");
+
+====================================================================================================
+
+Practical 8: Write a MATLAB program to perform border detection operation by using Morphology.
+
+clc;
+clear all;
+close all;
+
+a=imread("peppers.png");
+subplot(2,2,1); imshow(a);
+
+a=rgb2gray(a);
+imshow(a); title("Original Image"); 
+
+bwimage=1-imbinarize(a);
+subplot(2,2,2); imshow(bwimage); title("B/W Image");  
+
+se=ones(10,10);
+
+dil=imdilate(bwimage,se);
+subplot(2,2,3); imshow(dil); title("Image Dilation");
+
+erod=imerode(bwimage,se);
+subplot(2,2,4); imshow(erod); title("Image Erosion");
+
+% Opening
+openimg=imopen(bwimage,se);
+figure();
+subplot(2,2,1); imshow(a); title("Original Image"); 
+subplot(2,2,2); imshow(bwimage); title("B/W Image"); 
+subplot(2,2,3); imshow(openimg); title("Image Opening");
+
+closeimg=imclose(bwimage,se);
+subplot(2,2,4); imshow(closeimg); title("Image Closing");
+
+% Border Detection
+figure();
+border=dil-bwimage;
+imshow(border);
+title("Image Border (from Dilation - Original)");
+
+====================================================================================================
+
+Practical 9: Develop an application to Object detection and recognition in image.
+
+clc;
+clear all;
+close all;
+warning off;
+
+% cam = webcam;   % Uncomment if using webcam
+
+while true
+    % frame = snapshot(cam);    % For webcam
+    frame = imread("birds.jfif");   % Static image
+    
+    imshow(frame);
+    title("Harris Corner Detection on Birds Image");
+    
+    % Harris Corner Detection
+    cornerPoints = detectHarrisFeatures(rgb2gray(frame));
+    strongCorners = selectStrongest(cornerPoints, 15);
+    
+    hold on;
+    plot(strongCorners.Location(:,1), strongCorners.Location(:,2), ...
+         "g.", "MarkerSize", 20);
+    hold off;
+    
+    drawnow;
+end
+
+====================================================================================================
+
+Practical 10: Develop an application to Object tracking in Video.
+
+function MotionBasedSingleImageTrackingExample()
+    % Read the image
+    frame = imread('vprpract10.avif');
+
+    % Create system objects
+    obj = setupSystemObjects();
+
+    % Initialize tracks
+    tracks = initializeTracks();
+    nextId = 1;
+
+    % Detect moving objects in the image
+    [centroids, bboxes, mask] = detectObjects(obj, frame);
+
+    % Create tracks for detections
+    [tracks, nextId] = createNewTracks(tracks, centroids, bboxes, nextId);
+
+    % Display tracking results
+    displayTrackingResults(frame, mask, tracks);
+end
+
+%% ----------------- Supporting Functions ----------------- %%
+function obj = setupSystemObjects()
+    % Foreground detector
+    obj.detector = vision.ForegroundDetector('NumGaussians', 3, ...
+        'NumTrainingFrames', 40, 'MinimumBackgroundRatio', 0.7);
+
+    % Blob analyser
+    obj.blobAnalyser = vision.BlobAnalysis('BoundingBoxOutputPort', true, ...
+        'AreaOutputPort', true, 'CentroidOutputPort', true, ...
+        'MinimumBlobArea', 400);
+end
+
+function tracks = initializeTracks()
+    % Create empty track structure
+    tracks = struct(...
+        'id', {}, ...
+        'bbox', {}, ...
+        'kalmanFilter', {}, ...
+        'age', {}, ...
+        'totalVisibleCount', {}, ...
+        'consecutiveInvisibleCount', {});
+end
+
+function [centroids, bboxes, mask] = detectObjects(obj, frame)
+    % Convert to grayscale if image is RGB
+    if size(frame,3) == 3
+        frameGray = rgb2gray(frame);
+    else
+        frameGray = frame;
+    end
+
+    % Detect foreground
+    mask = obj.detector.step(frameGray);
+
+    % Morphological operations
+    mask = imopen(mask, strel('rectangle', [3,3]));
+    mask = imclose(mask, strel('rectangle', [15, 15]));
+    mask = imfill(mask, 'holes');
+
+    % Blob analysis
+    [~, centroids, bboxes] = obj.blobAnalyser.step(mask);
+end
+
+function [tracks, nextId] = createNewTracks(tracks, centroids, bboxes, nextId)
+    % Create new tracks for each detection
+    for i = 1:size(centroids, 1)
+        centroid = centroids(i,:);
+        bbox = bboxes(i,:);
+
+        % Kalman filter
+        kalmanFilter = configureKalmanFilter('ConstantVelocity', ...
+            centroid, [200, 50], [100, 25], 100);
+
+        % Create new track
+        newTrack = struct(...
+            'id', nextId, ...
+            'bbox', bbox, ...
+            'kalmanFilter', kalmanFilter, ...
+            'age', 1, ...
+            'totalVisibleCount', 1, ...
+            'consecutiveInvisibleCount', 0);
+
+        tracks(end + 1) = newTrack;
+        nextId = nextId + 1;
+    end
+end
+
+function displayTrackingResults(frame, mask, tracks)
+    % Convert mask to RGB
+    maskRGB = uint8(repmat(mask, [1,1,3])) .* 255;
+
+    % Display tracks if they exist
+    if ~isempty(tracks)
+        bboxes = cat(1, tracks.bbox);
+        ids = int32([tracks(:).id]);
+        labels = cellstr(int2str(ids'));
+        frame = insertObjectAnnotation(frame, 'rectangle', bboxes, labels);
+        maskRGB = insertObjectAnnotation(maskRGB, 'rectangle', bboxes, labels);
+    end
+
+    % Display the results
+    figure; imshow(frame); title('Detected Objects');
+    figure; imshow(maskRGB); title('Foreground Mask');
+end
+
+====================================================================================================
+
