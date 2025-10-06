@@ -1,0 +1,207 @@
+1. Perform the Single Variable summary using Python.
+
+import pandas as pd 
+import numpy as np 
+import seaborn as sns 
+import matplotlib.pyplot as plt 
+from scipy import stats 
+
+sns.get_dataset_names()
+data = sns.load_dataset('diamonds')
+
+print("Basic Summary Statistics:")
+print(f"Count: {data.count()}")
+print(f"Mean: {data['price'].mean()}")
+print(f"Median: {data['depth'].median()}")
+print(f"Mode: {data['cut'].mode().tolist()}")
+print(f"Min: {data['carat'].min()}")
+print(f"Max: {data['carat'].max()}")
+print (f"Range: {data['carat'].max()-data['carat'].min()}")
+print (f"Standard Deviation: {data['depth'].std()}")
+print(f"Variance: {data['carat'].var()}")
+print(f"25th Percentile (Q1): {data['price'].quantile (0.25)}")
+print(f"50th Percentile (Q2 Median): {data['price'].quantile(0.50)}")
+print(f"75th Percentile (Q3): {data['price'].quantile(0.75)}")
+print(f"IQR (Q3 Q1): {data['price'].quantile (0.75)-data['price'].quantile(0.25)}")
+data['price'].count()
+print("Total Price:", data['price'].sum())
+print("Average Fare :",data ['price'].mean(),"$")
+cut_grp =data.groupby('cut')
+cut_grp
+cut_grp['price'].sum()
+data.value_counts('color')
+Premium_grp =data.groupby('cut').get_group('Premium')
+print("Total of Premium :", Premium_grp['price'].sum())
+data['cut'].unique()
+data['cut'].nunique()
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+2. Perform the Multiple Variable non graphical summary using Python
+
+import seaborn as sns
+sns.get_dataset_names()
+taxi = sns.load_dataset('taxis')
+t = taxi[['distance','fare','tip','tolls','total']]
+t.corr()
+taxi.agg(
+    {
+        "fare":["min","max","mean","median","skew"],
+        "total":["min","max","median","mean"]
+    }
+)
+pd.crosstab(taxi['payment'],taxi['color'])
+pd.crosstab(taxi['payment'],[taxi['color'],taxi['passengers']])
+pd.crosstab([taxi['payment'],taxi['color']],taxi['passengers'])
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+3.Perform the Single Variable Graphical summary using Python.
+
+df = sns.load_dataset('titanic')
+plt.hist(x=df['fare'],
+         color='blue',
+         histtype='stepfilled',
+         edgecolor='r')
+
+plt.hist(x=df['fare'],
+         bins=[20,40,60,80,100,120,140,160,180],
+         color='blue',
+         histtype='stepfilled',
+         edgecolor='r')
+plt.hist(x=df['fare'],
+         bins=[20,40,60,80,100,120,140,160,180],
+         color='blue',
+         histtype='stepfilled',
+         edgecolor='r')
+plt.axvline(x=df['fare'].median(), color='g', linestyle='--')
+plt.xlabel('Fare')
+plt.ylabel('Frequency')
+plt.title('Histogram of Fare with Median Line')
+
+sns.countplot(x=df['sex'],palette='pastel')
+plt.xlabel('Sex')   
+plt.ylabel('Count')
+plt.title('Count Plot of Sex')
+sns.countplot(x=df['sex'],
+              palette='PiYG',
+              hue=df['alive'])
+plt.xlabel('Sex')   
+plt.ylabel('Count')
+plt.title('Count Plot of Sex')
+plt.grid(True)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+4.Perform the Multiple Variable summary using Python.
+
+df = sns.load_dataset('tips')
+plt.bar(x=df['day'], height=df['total_bill'], color='blue', alpha=0.4)
+colors = ['gold', 'yellowgreen', 'lightcoral', 'lightskyblue']
+exp=(0.1,0,0,0)
+wp={'linewidth': 2, 'edgecolor': "green"}
+plt.pie(df['day'].value_counts(), labels=['Sat', 'Sun', 'Thurs', 'Fri'],
+        explode=exp, radius=1, colors=colors,
+        autopct='%1.3f%%', shadow=True, 
+        startangle=90, wedgeprops=wp)
+plt.scatter(x='total_bill', y='tip', c="pink",
+            linewidths=0.5,
+            marker=".",
+            edgecolors="green",
+            s=50,
+            data=df
+            )
+sns.boxplot(x='tip',y='sex',hue='time',orient='h',data=df,showmeans=True)
+sns.swarmplot(x="day",y="total_bill", data = df, size=5, palette='Set1')
+
+plt.subplot(1,2,2)
+sns.stripplot(x="day", y="total_bill", data = df, size=5, palette='Set1')
+plt.show()
+
+data =sns.load_dataset('penguins')
+sns.jointplot(x='body_mass_g', y='flipper_length_mm', data=data, kind='hex')
+sns.jointplot(x='body_mass_g', y='flipper_length_mm', data=data, kind='scatter')
+sns.jointplot(x='body_mass_g', y='flipper_length_mm', data=data, kind='reg')
+sns.set(style='ticks')
+sns.relplot(x='bill_length_mm', y='bill_depth_mm', data=data)
+sns.relplot(x='bill_length_mm', y='bill_depth_mm', hue='flipper_length_mm', data=data)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+5. Perform Feature Transformation with all the types.
+
+data = pd.read_csv('samplesuperstore.csv')
+data['Profit'] = data['Profit'].astype('int64')
+data['Segment'] = data['Segment'].astype('category')
+data = pd.read_csv('samplesuperstore.csv')
+data['Profit'] = data['Profit'].astype('int64')
+data['Segment'] = data['Segment'].astype('category')
+data['UnitPrice'] = data['Sales']/data['Quantity']
+data['Total Discount'] = data['Discount']*data['Quantity']
+data.head()
+data['Sales_log']=np.log(data['Sales'])
+data.head() 
+data['Sales_log2']=np.log2(data['Sales'])
+data.head() 
+data['Sales_rep'] = np.reciprocal(data['Sales'])
+
+data.head()
+
+data['Sales_power'] = np.power(data['Sales'],2)
+data.head()
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+6.Perform the following Data Preparation task on any of the data
+● Missing Value Detection from all the columns
+● Feeding of Missing values.
+● Outlier Detection
+
+
+df = sns.load_dataset('penguins')
+df.columns
+df.isnull().sum()
+df ['bill_depth_mm'].fillna(0,inplace=True)
+df.head()
+df ['bill_depth_mm'].isnull().sum() 
+df.fillna(method='pad')
+df.fillna(method='bfill')
+bin = [25,30,35,40,45,50,55,60,65]
+plt.hist(x=df['bill_length_mm'], bins=bin )
+sns.boxplot(y='body_mass_g', x='sex', data=df)
+plt.xticks(rotation=90)
+sns.scatterplot(x='bill_length_mm',y='bill_depth_mm', hue='flipper_length_mm', data=df)
+fig=px.histogram (df,x='flipper_length_mm',marginal='box')
+
+fig.show()
+df['body_mass_g'].fillna('General', inplace=True)
+
+df.head()
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+7.Perform the following Data Preparation task on any of the data
+● Check the correlation between various columns
+● Check the skewness and kurtosis of data
+
+
+sample = pd.read_csv('SampleSuperstore.csv')
+sample.columns
+sample['Sales'].corr(sample['Quantity'])
+sample['Quantity'].corr(sample['Profit'])
+sample[['Profit','Discount']].kurt()
+sample['Discount'].kurt()
+sample['Profit'].kurt()
+sample['Sales'].kurt()
+sample['Profit'].skew()
+sample['Sales'].skew()
+
+
+
+
+
+
+
+
+
+
+
