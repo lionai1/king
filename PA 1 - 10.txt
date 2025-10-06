@@ -1,0 +1,1660 @@
+Practical No. 1
+Aim: Perform the Single Variable summary using Python.
+
+Code:
+
+import pandas as pd
+import numpy as np
+from scipy import stats
+import seaborn as sns
+
+# ---- cell separator ----
+
+sns.get_dataset_names()
+
+# ---- cell separator ----
+
+data = sns.load_dataset('planets')
+
+# ---- cell separator ----
+
+data.head()
+
+# ---- cell separator ----
+
+data.info()
+
+# ---- cell separator ----
+
+print(f"Count: {data.count()}")
+
+# ---- cell separator ----
+
+print(f"Mean: {data.select_dtypes(include=np.number).mean()}")
+
+# ---- cell separator ----
+
+print(f"Median: {data.select_dtypes(include=np.number).median()}")
+
+# ---- cell separator ----
+
+print(f"Mode: {data.select_dtypes(include=np.number).mode()}")
+
+# ---- cell separator ----
+
+print(f"Min: {data.select_dtypes(include=np.number).min()}")
+
+# ---- cell separator ----
+
+print(f"Max: {data.select_dtypes(include=np.number).max()}")
+
+# ---- cell separator ----
+
+print(f"Ranage: {data.select_dtypes(include=np.number).min()}- {data.select_dtypes(include=np.number).max()}")
+
+# ---- cell separator ----
+
+print(f"Standard Deviation: {data.select_dtypes(include=np.number).std()}")
+
+# ---- cell separator ----
+
+print(f"Variance: {data.select_dtypes(include=np.number).var()}")
+
+# ---- cell separator ----
+
+print(f"25th Percentile: {data.select_dtypes(include=np.number).quantile(0.25)}")
+
+# ---- cell separator ----
+
+print(f"50th Percentile: {data.select_dtypes(include=np.number).quantile(0.50)}")
+
+# ---- cell separator ----
+
+print(f"75th Percentile: {data.select_dtypes(include=np.number).quantile(0.75)}")
+
+# ---- cell separator ----
+
+print(f"IQR (Q3-Q1): {data.select_dtypes(include=np.number).quantile(0.75)}-{data.select_dtypes(include=np.number).quantile(0.25)}")
+
+================================================================================
+
+Practical No. 2
+Aim: Perform the Multiple Variable non graphical summary using Python.
+
+Code:
+
+#Aim : Perform the Multiple Variable non graphical summary using Python
+
+# ---- cell separator ----
+
+import seaborn as sns
+sns.get_dataset_names()
+
+# ---- cell separator ----
+
+taxi = sns.load_dataset('taxis')
+
+# ---- cell separator ----
+
+taxi.head()
+
+# ---- cell separator ----
+
+t = taxi[['distance','fare','tip','tolls','total']]
+
+# ---- cell separator ----
+
+t.corr()
+
+# ---- cell separator ----
+
+taxi.agg(
+    {
+        "fare":["min","max","mean","median","skew"],
+        "total":["min","max","median","mean"]
+    }
+)
+
+# ---- cell separator ----
+
+import pandas as pd
+
+# ---- cell separator ----
+
+pd.crosstab(taxi['payment'],taxi['color'])
+
+# ---- cell separator ----
+
+pd.crosstab(taxi['payment'],[taxi['color'],taxi['passengers']])
+
+# ---- cell separator ----
+
+pd.crosstab([taxi['payment'],taxi['color']],taxi['passengers'])
+
+================================================================================
+
+Practical No. 3
+Aim: Perform the Single Variable Graphical summary using Python.
+
+Code:
+
+# practical no. 03
+import seaborn as sns
+import matplotlib.pyplot as plt
+taxi=sns.load_dataset("taxis")
+
+# ---- cell separator ----
+
+
+taxi.info()
+
+# ---- cell separator ----
+
+plt.hist(x=taxi["fare"],color='r', histtype='stepfilled',edgecolor='yellow',alpha=0.5)
+
+# ---- cell separator ----
+
+plt.hist(x=taxi["fare"],bins=[0,10,20,30,40,50,60,70], color='r', histtype='step',edgecolor='yellow',alpha=0.5)
+
+# ---- cell separator ----
+
+plt.hist(x=taxi["fare"],bins=[0,10,20,30,40,50,60,70], color='r', histtype='stepfilled',edgecolor='yellow',alpha=0.5)
+plt.axvline(taxi["fare"].mean(),color="b",linestyle='dashed',linewidth=2)
+plt.axvline(taxi["fare"].median(),color="g",linestyle='dashed',linewidth=2)
+plt.xlabel('Fare')
+plt.ylabel('Frequency')
+plt.title('3441 Distribution of fare')
+
+# ---- cell separator ----
+
+# for qualitative columns
+sns.countplot(x=taxi['payment'],palette='gist_rainbow')
+
+# ---- cell separator ----
+
+sns.countplot(x=taxi['payment'],palette='PiYG',hue=taxi['color'])
+
+================================================================================
+
+Practical No. 4
+Aim: Perform the Multiple Variable summary using Python.
+
+Code:
+
+# multivariate graphical analysis
+# name of plot, write its use with pen, code, analytical statement.
+
+# ---- cell separator ----
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+import pandas as pd
+tip=sns.load_dataset("tips")
+tip.head()
+
+# ---- cell separator ----
+
+# barplot
+plt.bar(x=tip['day'],height=tip['total_bill'],color='green',alpha=0.5)
+#here we get intensity of colors according to values
+# the bar plot shows how bills vary across the day
+
+# ---- cell separator ----
+
+colors=['gold','yellowgreen','lightcoral','skyblue']
+exp=(0.1,0,0,0)
+wp={'linewidth':2,"edgecolor":'green'}
+plt.pie(tip['day'].value_counts(),
+            labels=['sat','sun','thurs','fri'],
+            explode=exp, radius=1, colors=colors,
+            autopct='%1.3f%%',shadow=True, startangle=180, wedgeprops=wp)
+
+# ---- cell separator ----
+
+#scatter plot
+plt.scatter('total_bill','tip',c="pink", linewidths=1,
+             marker="*", edgecolor='orange', s=20, data=tip)
+
+# ---- cell separator ----
+
+#scatter plot
+plt.scatter(x='total_bill',y='tip',c="black", linewidths=0.5,
+             marker="*", edgecolor='orange', s=50, data=tip)
+# this scatter plot is showing positive correlation i.e. as the total_bill values increases the tip value also increases
+
+# ---- cell separator ----
+
+# box plot
+
+#sns.boxplot(x='tip',y='sex',orient='h',data=tip,showmeans=True)
+
+sns.boxplot(x='tip',y='sex',hue='time',orient='h',data=tip,showmeans=True)
+
+# there are outliers in dinner time of male
+# thers huge concentration of data for 3rd quartile in female
+# positive skewed
+# hue = used to add qualitative col
+
+
+# ---- cell separator ----
+
+plt.subplot(1,2,1)
+sns.swarmplot(x='day',y='total_bill',data=tip, size=5,palette='Set1',)
+plt.subplot(1,2,2)
+sns.stripplot(x='day',y='total_bill',data=tip, size=5,palette='Set2')
+
+# ---- cell separator ----
+
+sns.jointplot(x="total_bill",y="tip",kind="hex",data=tip)
+plt.show()
+
+# ---- cell separator ----
+
+sns.jointplot(x="total_bill",y="tip",kind="reg",data=tip)
+plt.show()
+
+# ---- cell separator ----
+
+sns.relplot(x="total_bill",y="tip",data=tip)
+
+# ---- cell separator ----
+
+sns.relplot(x="total_bill",y="tip",hue="time",data=tip)
+
+# ---- cell separator ----
+
+sns.relplot(x="total_bill",y="tip",hue="day",col="time",row="sex",data=tip)
+
+# ---- cell separator ----
+
+sns.relplot(x="total_bill",y="tip",size="size",data=tip)
+
+# ---- cell separator ----
+
+sns.relplot(
+    data=tip, x="total_bill", y="tip",
+    size="size", col="time", hue="time", style="sex",
+    palette=["b","r"],sizes=(10,100)
+)
+
+# ---- cell separator ----
+
+d=tip[["tip","total_bill","size"]]
+sns.heatmap(d.corr(),annot=True)
+
+# ---- cell separator ----
+
+sns.lineplot(x="total_bill", y="tip",hue="time", data = tip)
+
+# ---- cell separator ----
+
+# pract 5
+# related to feature transformation
+
+# ---- cell separator ----
+
+import pandas as pd
+import numpy as np
+url = '/content/Sample - Superstore - Sample - Superstore.csv'
+sample= pd.read_csv(url,encoding="latin1")
+
+# ---- cell separator ----
+
+sample.info()
+
+# ---- cell separator ----
+
+sample.head()
+
+# ---- cell separator ----
+
+sample['Profit']= sample['Profit'].astype('int64')
+sample['Segment']= sample['Segment'].astype('category')
+
+# ---- cell separator ----
+
+sample[['Profit','Segment']].info()
+
+# ---- cell separator ----
+
+# here we have created new column with name "UnitPrice"
+sample['UnitPrice']=sample['Sales'] / sample['Quantity']
+
+# ---- cell separator ----
+
+# printing the intial values of 3 columns
+sample[['Sales','Quantity','UnitPrice']].head()
+
+# ---- cell separator ----
+
+sample.head()
+
+# ---- cell separator ----
+
+sample['Sales_log']=np.log(sample['Sales'])
+sample[['Sales','Sales_log']].head()
+
+# ---- cell separator ----
+
+sample['Sales_log2']=np.log2(sample['Sales'])
+sample[['Sales','Sales_log2']].head()
+
+# ---- cell separator ----
+
+sample['Sales_log10']=np.log10(sample['Sales'])
+sample[['Sales','Sales_log10']].head()
+
+# ---- cell separator ----
+
+sample['Sales_rep']= np.reciprocal(sample['Sales'])
+sample[['Sales','Sales_rep']].head()
+
+# ---- cell separator ----
+
+sample['Quantity_sq']=np.power(sample['Quantity'],2)
+sample[['Quantity','Quantity_sq']].head()
+
+# ---- cell separator ----
+
+sample['Sales_sqrt']= np.sqrt(sample['Sales'])
+sample[['Sales','Sales_sqrt']].head()
+
+# ---- cell separator ----
+
+import pandas as pd
+import numpy as np
+url = '/content/Loan.csv'
+df= pd.read_csv(url,encoding="latin1")
+
+# ---- cell separator ----
+
+df.info()
+
+# ---- cell separator ----
+
+df.head()
+
+# ---- cell separator ----
+
+df['Date']= pd.to_datetime(df['date_issued'])
+df['Date'].info()
+
+# ---- cell separator ----
+
+df.head()
+
+# ---- cell separator ----
+
+df['Month']= df['Date'].dt.month
+df['Year']= df['Date'].dt.year
+df['day']= df['Date'].dt.day
+
+# ---- cell separator ----
+
+df[['day','Month','Year']]
+
+# ---- cell separator ----
+
+df['day_of_week']= df['Date'].dt.day_of_week
+df['day_of_year']= df['Date'].dt.day_of_year
+df[['date_issued','Year','day_of_week','day_of_year']].head()
+
+# ---- cell separator ----
+
+def week_part(day):
+  if day in [1,2,3,4,5,6,7]:
+    return "week 1"
+  elif day in [8,9,10,11,12,13,14]:
+    return "week 2"
+  elif day in [15,16,17,18,19,20,21]:
+    return "week 3"
+  elif day in [22,23,24,25,26,27,28]:
+    return "week 4"
+  elif day in [29,30,31]:
+    return "week 5"
+
+# ---- cell separator ----
+
+df['week_no']= df['day'].apply(week_part)
+df[['day','week_no']]
+
+# ---- cell separator ----
+
+df['week_no'].value_counts()
+
+# ---- cell separator ----
+
+df['date_issued:day_of_week']=df['Date'].dt.day_of_week
+df['date_issued:is_weekend']=np.where(df['date_issued:day_of_week'].isin([5,6]),1,0)
+df[['date_issued','date_issued:day_of_week','date_issued:is_weekend']].head()
+
+# ---- cell separator ----
+
+df['is_leap_year']=df['Date'].dt.is_leap_year
+df[['Date','is_leap_year']].head()
+
+# ---- cell separator ----
+
+df['Date'].min(), df['Date'].max()
+
+# ---- cell separator ----
+
+df['Date'].max()-df['Date'].min()
+
+# ---- cell separator ----
+
+df['dt_period']=df['Date'].dt.to_period('Y')
+
+# ---- cell separator ----
+
+df.head()
+
+# ---- cell separator ----
+
+df['next_15_days']=df['Date']+ pd.Timedelta(days=15)
+df[['Date','next_15_days']].head()
+
+# ---- cell separator ----
+
+df['date_issued:is_year_start']=df['Date'].dt.is_year_start
+df['date_issued:is_quarter_start']=df['Date'].dt.is_quarter_start
+df['date_issued:is_month_start']=df['Date'].dt.is_month_start
+df['date_issued:is_month_end']=df['Date'].dt.is_month_end
+df['date_issued:is_year_end']=df['Date'].dt.is_year_end
+df[['Date','date_issued:is_year_start','date_issued:is_quarter_start',
+    'date_issued:is_month_start','date_issued:is_month_end','date_issued:is_year_end']].head(10)
+
+
+# ---- cell separator ----
+
+df['date_issued:is_year_start'].value_counts()
+
+# ---- cell separator ----
+
+import pandas as pd
+import numpy as np
+url = '/Sample - Superstore - Sample - Superstore.csv'
+sample= pd.read_csv(url,encoding="latin1")
+
+# ---- cell separator ----
+
+cat_dummmy=pd.get_dummies(sample['Category']).head()
+cat_dummmy
+
+# ---- cell separator ----
+
+pd.concat([df,cat_dummmy],axis=1).head()
+
+# ---- cell separator ----
+
+sample['Ship Mode'].replace(['Standard Class','Second class','First Class','Same Day'],[11,12,13,14], inplace=True)
+sample.head()
+
+# ---- cell separator ----
+
+# label encoder
+from sklearn import preprocessing
+label_encoder=preprocessing.LabelEncoder()
+sample["Ship Mode LN"]= label_encoder.fit_transform(sample["Ship Mode"].astype(str))
+sample.head()
+
+# ---- cell separator ----
+
+sample[['Ship Mode',"Ship Mode LN"]].value_counts()
+
+# ---- cell separator ----
+
+sample['initi']=sample['Order ID'].str[:2]
+sample['initi']
+
+# ---- cell separator ----
+
+sample['initi'].value_counts()
+
+# ---- cell separator ----
+
+# if data is ordinal and wants to do dummy variable stuff go with replace option
+
+================================================================================
+
+Practical No. 5
+Aim: Perform Feature Transformation with all the types.
+
+Code:
+
+# multivariate graphical analysis
+# name of plot, write its use with pen, code, analytical statement.
+
+# ---- cell separator ----
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+import pandas as pd
+tip=sns.load_dataset("tips")
+tip.head()
+
+# ---- cell separator ----
+
+# barplot
+plt.bar(x=tip['day'],height=tip['total_bill'],color='green',alpha=0.5)
+#here we get intensity of colors according to values
+# the bar plot shows how bills vary across the day
+
+# ---- cell separator ----
+
+colors=['gold','yellowgreen','lightcoral','skyblue']
+exp=(0.1,0,0,0)
+wp={'linewidth':2,"edgecolor":'green'}
+plt.pie(tip['day'].value_counts(),
+            labels=['sat','sun','thurs','fri'],
+            explode=exp, radius=1, colors=colors,
+            autopct='%1.3f%%',shadow=True, startangle=180, wedgeprops=wp)
+
+# ---- cell separator ----
+
+#scatter plot
+plt.scatter('total_bill','tip',c="pink", linewidths=1,
+             marker="*", edgecolor='orange', s=20, data=tip)
+
+# ---- cell separator ----
+
+#scatter plot
+plt.scatter(x='total_bill',y='tip',c="black", linewidths=0.5,
+             marker="*", edgecolor='orange', s=50, data=tip)
+# this scatter plot is showing positive correlation i.e. as the total_bill values increases the tip value also increases
+
+# ---- cell separator ----
+
+# box plot
+
+#sns.boxplot(x='tip',y='sex',orient='h',data=tip,showmeans=True)
+
+sns.boxplot(x='tip',y='sex',hue='time',orient='h',data=tip,showmeans=True)
+
+# there are outliers in dinner time of male
+# thers huge concentration of data for 3rd quartile in female
+# positive skewed
+# hue = used to add qualitative col
+
+
+# ---- cell separator ----
+
+plt.subplot(1,2,1)
+sns.swarmplot(x='day',y='total_bill',data=tip, size=5,palette='Set1',)
+plt.subplot(1,2,2)
+sns.stripplot(x='day',y='total_bill',data=tip, size=5,palette='Set2')
+
+# ---- cell separator ----
+
+sns.jointplot(x="total_bill",y="tip",kind="hex",data=tip)
+plt.show()
+
+# ---- cell separator ----
+
+sns.jointplot(x="total_bill",y="tip",kind="reg",data=tip)
+plt.show()
+
+# ---- cell separator ----
+
+sns.relplot(x="total_bill",y="tip",data=tip)
+
+# ---- cell separator ----
+
+sns.relplot(x="total_bill",y="tip",hue="time",data=tip)
+
+# ---- cell separator ----
+
+sns.relplot(x="total_bill",y="tip",hue="day",col="time",row="sex",data=tip)
+
+# ---- cell separator ----
+
+sns.relplot(x="total_bill",y="tip",size="size",data=tip)
+
+# ---- cell separator ----
+
+sns.relplot(
+    data=tip, x="total_bill", y="tip",
+    size="size", col="time", hue="time", style="sex",
+    palette=["b","r"],sizes=(10,100)
+)
+
+# ---- cell separator ----
+
+d=tip[["tip","total_bill","size"]]
+sns.heatmap(d.corr(),annot=True)
+
+# ---- cell separator ----
+
+sns.lineplot(x="total_bill", y="tip",hue="time", data = tip)
+
+# ---- cell separator ----
+
+# pract 5
+# related to feature transformation
+
+# ---- cell separator ----
+
+import pandas as pd
+import numpy as np
+url = '/content/Sample - Superstore - Sample - Superstore.csv'
+sample= pd.read_csv(url,encoding="latin1")
+
+# ---- cell separator ----
+
+sample.info()
+
+# ---- cell separator ----
+
+sample.head()
+
+# ---- cell separator ----
+
+sample['Profit']= sample['Profit'].astype('int64')
+sample['Segment']= sample['Segment'].astype('category')
+
+# ---- cell separator ----
+
+sample[['Profit','Segment']].info()
+
+# ---- cell separator ----
+
+# here we have created new column with name "UnitPrice"
+sample['UnitPrice']=sample['Sales'] / sample['Quantity']
+
+# ---- cell separator ----
+
+# printing the intial values of 3 columns
+sample[['Sales','Quantity','UnitPrice']].head()
+
+# ---- cell separator ----
+
+sample.head()
+
+# ---- cell separator ----
+
+sample['Sales_log']=np.log(sample['Sales'])
+sample[['Sales','Sales_log']].head()
+
+# ---- cell separator ----
+
+sample['Sales_log2']=np.log2(sample['Sales'])
+sample[['Sales','Sales_log2']].head()
+
+# ---- cell separator ----
+
+sample['Sales_log10']=np.log10(sample['Sales'])
+sample[['Sales','Sales_log10']].head()
+
+# ---- cell separator ----
+
+sample['Sales_rep']= np.reciprocal(sample['Sales'])
+sample[['Sales','Sales_rep']].head()
+
+# ---- cell separator ----
+
+sample['Quantity_sq']=np.power(sample['Quantity'],2)
+sample[['Quantity','Quantity_sq']].head()
+
+# ---- cell separator ----
+
+sample['Sales_sqrt']= np.sqrt(sample['Sales'])
+sample[['Sales','Sales_sqrt']].head()
+
+# ---- cell separator ----
+
+import pandas as pd
+import numpy as np
+url = '/content/Loan.csv'
+df= pd.read_csv(url,encoding="latin1")
+
+# ---- cell separator ----
+
+df.info()
+
+# ---- cell separator ----
+
+df.head()
+
+# ---- cell separator ----
+
+df['Date']= pd.to_datetime(df['date_issued'])
+df['Date'].info()
+
+# ---- cell separator ----
+
+df.head()
+
+# ---- cell separator ----
+
+df['Month']= df['Date'].dt.month
+df['Year']= df['Date'].dt.year
+df['day']= df['Date'].dt.day
+
+# ---- cell separator ----
+
+df[['day','Month','Year']]
+
+# ---- cell separator ----
+
+df['day_of_week']= df['Date'].dt.day_of_week
+df['day_of_year']= df['Date'].dt.day_of_year
+df[['date_issued','Year','day_of_week','day_of_year']].head()
+
+# ---- cell separator ----
+
+def week_part(day):
+  if day in [1,2,3,4,5,6,7]:
+    return "week 1"
+  elif day in [8,9,10,11,12,13,14]:
+    return "week 2"
+  elif day in [15,16,17,18,19,20,21]:
+    return "week 3"
+  elif day in [22,23,24,25,26,27,28]:
+    return "week 4"
+  elif day in [29,30,31]:
+    return "week 5"
+
+# ---- cell separator ----
+
+df['week_no']= df['day'].apply(week_part)
+df[['day','week_no']]
+
+# ---- cell separator ----
+
+df['week_no'].value_counts()
+
+# ---- cell separator ----
+
+df['date_issued:day_of_week']=df['Date'].dt.day_of_week
+df['date_issued:is_weekend']=np.where(df['date_issued:day_of_week'].isin([5,6]),1,0)
+df[['date_issued','date_issued:day_of_week','date_issued:is_weekend']].head()
+
+# ---- cell separator ----
+
+df['is_leap_year']=df['Date'].dt.is_leap_year
+df[['Date','is_leap_year']].head()
+
+# ---- cell separator ----
+
+df['Date'].min(), df['Date'].max()
+
+# ---- cell separator ----
+
+df['Date'].max()-df['Date'].min()
+
+# ---- cell separator ----
+
+df['dt_period']=df['Date'].dt.to_period('Y')
+
+# ---- cell separator ----
+
+df.head()
+
+# ---- cell separator ----
+
+df['next_15_days']=df['Date']+ pd.Timedelta(days=15)
+df[['Date','next_15_days']].head()
+
+# ---- cell separator ----
+
+df['date_issued:is_year_start']=df['Date'].dt.is_year_start
+df['date_issued:is_quarter_start']=df['Date'].dt.is_quarter_start
+df['date_issued:is_month_start']=df['Date'].dt.is_month_start
+df['date_issued:is_month_end']=df['Date'].dt.is_month_end
+df['date_issued:is_year_end']=df['Date'].dt.is_year_end
+df[['Date','date_issued:is_year_start','date_issued:is_quarter_start',
+    'date_issued:is_month_start','date_issued:is_month_end','date_issued:is_year_end']].head(10)
+
+
+# ---- cell separator ----
+
+df['date_issued:is_year_start'].value_counts()
+
+# ---- cell separator ----
+
+import pandas as pd
+import numpy as np
+url = '/Sample - Superstore - Sample - Superstore.csv'
+sample= pd.read_csv(url,encoding="latin1")
+
+# ---- cell separator ----
+
+cat_dummmy=pd.get_dummies(sample['Category']).head()
+cat_dummmy
+
+# ---- cell separator ----
+
+pd.concat([df,cat_dummmy],axis=1).head()
+
+# ---- cell separator ----
+
+sample['Ship Mode'].replace(['Standard Class','Second class','First Class','Same Day'],[11,12,13,14], inplace=True)
+sample.head()
+
+# ---- cell separator ----
+
+# label encoder
+from sklearn import preprocessing
+label_encoder=preprocessing.LabelEncoder()
+sample["Ship Mode LN"]= label_encoder.fit_transform(sample["Ship Mode"].astype(str))
+sample.head()
+
+# ---- cell separator ----
+
+sample[['Ship Mode',"Ship Mode LN"]].value_counts()
+
+# ---- cell separator ----
+
+sample['initi']=sample['Order ID'].str[:2]
+sample['initi']
+
+# ---- cell separator ----
+
+sample['initi'].value_counts()
+
+# ---- cell separator ----
+
+# if data is ordinal and wants to do dummy variable stuff go with replace option
+
+================================================================================
+
+Practical No. 6
+Aim: Perform the following Data Preparation tasks: Missing Value Detection, Feeding of Missing Values, Outlier Detection.
+
+Code:
+
+import pandas as pd
+sample = pd.read_csv('/content/Sample - Superstore - Sample - Superstore.csv', encoding='latin1')
+
+# ---- cell separator ----
+
+sample.info()
+
+# ---- cell separator ----
+
+sample.columns
+
+# ---- cell separator ----
+
+sample['Sales'].corr(sample['Quantity'])
+
+# ---- cell separator ----
+
+sample['Quantity'].corr(sample['Profit'])
+
+# ---- cell separator ----
+
+sample['Discount'].corr(sample['Profit'])
+
+# ---- cell separator ----
+
+sample.corr(numeric_only=True)
+
+# ---- cell separator ----
+
+sample['Discount'].kurt()
+
+# ---- cell separator ----
+
+sample['Sales'].kurt()
+
+# ---- cell separator ----
+
+sample['Profit'].skew()
+
+# ---- cell separator ----
+
+sample['Sales'].skew()
+
+# ---- cell separator ----
+
+import seaborn as sns
+import pandas as pd
+
+# Load Titanic dataset
+titanic = sns.load_dataset('titanic')
+
+# ---- cell separator ----
+
+titanic.head()
+
+# ---- cell separator ----
+
+titanic.info()
+
+# ---- cell separator ----
+
+titanic.isnull()
+
+# ---- cell separator ----
+
+titanic.isnull().sum()
+
+# ---- cell separator ----
+
+titanic['age'] = titanic['age'].fillna(0)
+
+# ---- cell separator ----
+
+titanic.isnull().sum()
+
+# ---- cell separator ----
+
+titanic.fillna(method='pad')
+
+# ---- cell separator ----
+
+titanic.fillna(method='bfill')
+
+# ---- cell separator ----
+
+titanic['embark_town'] = titanic['embark_town'].fillna('General')
+
+
+# ---- cell separator ----
+
+titanic['embark_town'].isna().sum()
+
+# ---- cell separator ----
+
+import matplotlib.pyplot as plt
+bin=[0,15,30,45,50,60,80]
+plt.hist(x=titanic['age'],bins=bin)
+
+# ---- cell separator ----
+
+sns.boxplot(y='age', x='sex', data=titanic)
+plt.xticks(rotation=90)
+
+# ---- cell separator ----
+
+sns.scatterplot(x='age', y='fare',hue='survived', data=titanic)
+
+# ---- cell separator ----
+
+import plotly.express as px
+fig= px.histogram(titanic, x='age', marginal='box')
+fig.show()
+
+================================================================================
+
+Practical No. 7
+Aim: Perform the following Data Preparation tasks: Correlation between variables, Skewness and Kurtosis of data, Transformation of data.
+
+Code:
+
+import pandas as pd
+sample = pd.read_csv('/content/Sample - Superstore - Sample - Superstore.csv', encoding='latin1')
+
+# ---- cell separator ----
+
+sample.info()
+
+# ---- cell separator ----
+
+sample.columns
+
+# ---- cell separator ----
+
+sample['Sales'].corr(sample['Quantity'])
+
+# ---- cell separator ----
+
+sample['Quantity'].corr(sample['Profit'])
+
+# ---- cell separator ----
+
+sample['Discount'].corr(sample['Profit'])
+
+# ---- cell separator ----
+
+sample.corr(numeric_only=True)
+
+# ---- cell separator ----
+
+sample['Discount'].kurt()
+
+# ---- cell separator ----
+
+sample['Sales'].kurt()
+
+# ---- cell separator ----
+
+sample['Profit'].skew()
+
+# ---- cell separator ----
+
+sample['Sales'].skew()
+
+# ---- cell separator ----
+
+import seaborn as sns
+import pandas as pd
+
+# Load Titanic dataset
+titanic = sns.load_dataset('titanic')
+
+# ---- cell separator ----
+
+titanic.head()
+
+# ---- cell separator ----
+
+titanic.info()
+
+# ---- cell separator ----
+
+titanic.isnull()
+
+# ---- cell separator ----
+
+titanic.isnull().sum()
+
+# ---- cell separator ----
+
+titanic['age'] = titanic['age'].fillna(0)
+
+# ---- cell separator ----
+
+titanic.isnull().sum()
+
+# ---- cell separator ----
+
+titanic.fillna(method='pad')
+
+# ---- cell separator ----
+
+titanic.fillna(method='bfill')
+
+# ---- cell separator ----
+
+titanic['embark_town'] = titanic['embark_town'].fillna('General')
+
+
+# ---- cell separator ----
+
+titanic['embark_town'].isna().sum()
+
+# ---- cell separator ----
+
+import matplotlib.pyplot as plt
+bin=[0,15,30,45,50,60,80]
+plt.hist(x=titanic['age'],bins=bin)
+
+# ---- cell separator ----
+
+sns.boxplot(y='age', x='sex', data=titanic)
+plt.xticks(rotation=90)
+
+# ---- cell separator ----
+
+sns.scatterplot(x='age', y='fare',hue='survived', data=titanic)
+
+# ---- cell separator ----
+
+import plotly.express as px
+fig= px.histogram(titanic, x='age', marginal='box')
+fig.show()
+
+================================================================================
+
+Practical No. 8
+Aim: Perform the Data Transformation on DateTime and Zip code features.
+
+Code:
+
+# multivariate graphical analysis
+# name of plot, write its use with pen, code, analytical statement.
+
+# ---- cell separator ----
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+import pandas as pd
+tip=sns.load_dataset("tips")
+tip.head()
+
+# ---- cell separator ----
+
+# barplot
+plt.bar(x=tip['day'],height=tip['total_bill'],color='green',alpha=0.5)
+#here we get intensity of colors according to values
+# the bar plot shows how bills vary across the day
+
+# ---- cell separator ----
+
+colors=['gold','yellowgreen','lightcoral','skyblue']
+exp=(0.1,0,0,0)
+wp={'linewidth':2,"edgecolor":'green'}
+plt.pie(tip['day'].value_counts(),
+            labels=['sat','sun','thurs','fri'],
+            explode=exp, radius=1, colors=colors,
+            autopct='%1.3f%%',shadow=True, startangle=180, wedgeprops=wp)
+
+# ---- cell separator ----
+
+#scatter plot
+plt.scatter('total_bill','tip',c="pink", linewidths=1,
+             marker="*", edgecolor='orange', s=20, data=tip)
+
+# ---- cell separator ----
+
+#scatter plot
+plt.scatter(x='total_bill',y='tip',c="black", linewidths=0.5,
+             marker="*", edgecolor='orange', s=50, data=tip)
+# this scatter plot is showing positive correlation i.e. as the total_bill values increases the tip value also increases
+
+# ---- cell separator ----
+
+# box plot
+
+#sns.boxplot(x='tip',y='sex',orient='h',data=tip,showmeans=True)
+
+sns.boxplot(x='tip',y='sex',hue='time',orient='h',data=tip,showmeans=True)
+
+# there are outliers in dinner time of male
+# thers huge concentration of data for 3rd quartile in female
+# positive skewed
+# hue = used to add qualitative col
+
+
+# ---- cell separator ----
+
+plt.subplot(1,2,1)
+sns.swarmplot(x='day',y='total_bill',data=tip, size=5,palette='Set1',)
+plt.subplot(1,2,2)
+sns.stripplot(x='day',y='total_bill',data=tip, size=5,palette='Set2')
+
+# ---- cell separator ----
+
+sns.jointplot(x="total_bill",y="tip",kind="hex",data=tip)
+plt.show()
+
+# ---- cell separator ----
+
+sns.jointplot(x="total_bill",y="tip",kind="reg",data=tip)
+plt.show()
+
+# ---- cell separator ----
+
+sns.relplot(x="total_bill",y="tip",data=tip)
+
+# ---- cell separator ----
+
+sns.relplot(x="total_bill",y="tip",hue="time",data=tip)
+
+# ---- cell separator ----
+
+sns.relplot(x="total_bill",y="tip",hue="day",col="time",row="sex",data=tip)
+
+# ---- cell separator ----
+
+sns.relplot(x="total_bill",y="tip",size="size",data=tip)
+
+# ---- cell separator ----
+
+sns.relplot(
+    data=tip, x="total_bill", y="tip",
+    size="size", col="time", hue="time", style="sex",
+    palette=["b","r"],sizes=(10,100)
+)
+
+# ---- cell separator ----
+
+d=tip[["tip","total_bill","size"]]
+sns.heatmap(d.corr(),annot=True)
+
+# ---- cell separator ----
+
+sns.lineplot(x="total_bill", y="tip",hue="time", data = tip)
+
+# ---- cell separator ----
+
+# pract 5
+# related to feature transformation
+
+# ---- cell separator ----
+
+import pandas as pd
+import numpy as np
+url = '/content/Sample - Superstore - Sample - Superstore.csv'
+sample= pd.read_csv(url,encoding="latin1")
+
+# ---- cell separator ----
+
+sample.info()
+
+# ---- cell separator ----
+
+sample.head()
+
+# ---- cell separator ----
+
+sample['Profit']= sample['Profit'].astype('int64')
+sample['Segment']= sample['Segment'].astype('category')
+
+# ---- cell separator ----
+
+sample[['Profit','Segment']].info()
+
+# ---- cell separator ----
+
+# here we have created new column with name "UnitPrice"
+sample['UnitPrice']=sample['Sales'] / sample['Quantity']
+
+# ---- cell separator ----
+
+# printing the intial values of 3 columns
+sample[['Sales','Quantity','UnitPrice']].head()
+
+# ---- cell separator ----
+
+sample.head()
+
+# ---- cell separator ----
+
+sample['Sales_log']=np.log(sample['Sales'])
+sample[['Sales','Sales_log']].head()
+
+# ---- cell separator ----
+
+sample['Sales_log2']=np.log2(sample['Sales'])
+sample[['Sales','Sales_log2']].head()
+
+# ---- cell separator ----
+
+sample['Sales_log10']=np.log10(sample['Sales'])
+sample[['Sales','Sales_log10']].head()
+
+# ---- cell separator ----
+
+sample['Sales_rep']= np.reciprocal(sample['Sales'])
+sample[['Sales','Sales_rep']].head()
+
+# ---- cell separator ----
+
+sample['Quantity_sq']=np.power(sample['Quantity'],2)
+sample[['Quantity','Quantity_sq']].head()
+
+# ---- cell separator ----
+
+sample['Sales_sqrt']= np.sqrt(sample['Sales'])
+sample[['Sales','Sales_sqrt']].head()
+
+# ---- cell separator ----
+
+import pandas as pd
+import numpy as np
+url = '/content/Loan.csv'
+df= pd.read_csv(url,encoding="latin1")
+
+# ---- cell separator ----
+
+df.info()
+
+# ---- cell separator ----
+
+df.head()
+
+# ---- cell separator ----
+
+df['Date']= pd.to_datetime(df['date_issued'])
+df['Date'].info()
+
+# ---- cell separator ----
+
+df.head()
+
+# ---- cell separator ----
+
+df['Month']= df['Date'].dt.month
+df['Year']= df['Date'].dt.year
+df['day']= df['Date'].dt.day
+
+# ---- cell separator ----
+
+df[['day','Month','Year']]
+
+# ---- cell separator ----
+
+df['day_of_week']= df['Date'].dt.day_of_week
+df['day_of_year']= df['Date'].dt.day_of_year
+df[['date_issued','Year','day_of_week','day_of_year']].head()
+
+# ---- cell separator ----
+
+def week_part(day):
+  if day in [1,2,3,4,5,6,7]:
+    return "week 1"
+  elif day in [8,9,10,11,12,13,14]:
+    return "week 2"
+  elif day in [15,16,17,18,19,20,21]:
+    return "week 3"
+  elif day in [22,23,24,25,26,27,28]:
+    return "week 4"
+  elif day in [29,30,31]:
+    return "week 5"
+
+# ---- cell separator ----
+
+df['week_no']= df['day'].apply(week_part)
+df[['day','week_no']]
+
+# ---- cell separator ----
+
+df['week_no'].value_counts()
+
+# ---- cell separator ----
+
+df['date_issued:day_of_week']=df['Date'].dt.day_of_week
+df['date_issued:is_weekend']=np.where(df['date_issued:day_of_week'].isin([5,6]),1,0)
+df[['date_issued','date_issued:day_of_week','date_issued:is_weekend']].head()
+
+# ---- cell separator ----
+
+df['is_leap_year']=df['Date'].dt.is_leap_year
+df[['Date','is_leap_year']].head()
+
+# ---- cell separator ----
+
+df['Date'].min(), df['Date'].max()
+
+# ---- cell separator ----
+
+df['Date'].max()-df['Date'].min()
+
+# ---- cell separator ----
+
+df['dt_period']=df['Date'].dt.to_period('Y')
+
+# ---- cell separator ----
+
+df.head()
+
+# ---- cell separator ----
+
+df['next_15_days']=df['Date']+ pd.Timedelta(days=15)
+df[['Date','next_15_days']].head()
+
+# ---- cell separator ----
+
+df['date_issued:is_year_start']=df['Date'].dt.is_year_start
+df['date_issued:is_quarter_start']=df['Date'].dt.is_quarter_start
+df['date_issued:is_month_start']=df['Date'].dt.is_month_start
+df['date_issued:is_month_end']=df['Date'].dt.is_month_end
+df['date_issued:is_year_end']=df['Date'].dt.is_year_end
+df[['Date','date_issued:is_year_start','date_issued:is_quarter_start',
+    'date_issued:is_month_start','date_issued:is_month_end','date_issued:is_year_end']].head(10)
+
+
+# ---- cell separator ----
+
+df['date_issued:is_year_start'].value_counts()
+
+# ---- cell separator ----
+
+import pandas as pd
+import numpy as np
+url = '/Sample - Superstore - Sample - Superstore.csv'
+sample= pd.read_csv(url,encoding="latin1")
+
+# ---- cell separator ----
+
+cat_dummmy=pd.get_dummies(sample['Category']).head()
+cat_dummmy
+
+# ---- cell separator ----
+
+pd.concat([df,cat_dummmy],axis=1).head()
+
+# ---- cell separator ----
+
+sample['Ship Mode'].replace(['Standard Class','Second class','First Class','Same Day'],[11,12,13,14], inplace=True)
+sample.head()
+
+# ---- cell separator ----
+
+# label encoder
+from sklearn import preprocessing
+label_encoder=preprocessing.LabelEncoder()
+sample["Ship Mode LN"]= label_encoder.fit_transform(sample["Ship Mode"].astype(str))
+sample.head()
+
+# ---- cell separator ----
+
+sample[['Ship Mode',"Ship Mode LN"]].value_counts()
+
+# ---- cell separator ----
+
+sample['initi']=sample['Order ID'].str[:2]
+sample['initi']
+
+# ---- cell separator ----
+
+sample['initi'].value_counts()
+
+# ---- cell separator ----
+
+# if data is ordinal and wants to do dummy variable stuff go with replace option
+
+================================================================================
+
+================================================================================
+
+Practical No. 9
+
+Code:
+import numpy as np
+import pandas as pd
+from sklearn.datasets import load_diabetes
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report, roc_curve, auc
+import matplotlib.pyplot as plt
+
+Code:
+url = "https://raw.githubusercontent.com/jbrownlee/Datasets/master/pima-indians-diabetes.data.csv"
+column_names = ['Pregnancles', 'Glucose', 'BloodPressure', 'SkinThickness', 'Insulin', 'BMI', 'DiabetesPedigreeFunction', 'Age', 'Outcome']
+df = pd.read_csv(url, names=column_names)
+print(df.head())
+
+Code:
+f, ax = plt.subplots(1, 2, figsize = (15, 7))
+f.suptitle("Diabetes?", fontsize = 18.)
+_ = df.Outcome.value_counts().plot.bar(ax = ax[0],
+                                       rot = 0,
+                                       color = (sns.color_palette()[0],
+                                              sns.color_palette()[2])).set(xticklabels = ["No", "Yes"])
+_ = df.Outcome.value_counts().plot.pie(labels = ("No", "Yes"),
+                                       autopct = "%.2f%%",
+                                       label = "", fontsize = 13.,
+                                       ax = ax [1], colors = (sns.color_palette()[0],
+                                                              sns.color_palette() [2]),
+                                       wedgeprops = {"linewidth": 1.5, "edgecolor": "r"})
+ax [1].texts[1].set_color("#F7F7F7")
+ax[1].texts[3].set_color("#F7F7F7")
+
+Code:
+fig, ax = plt.subplots (4,2, figsize=(16,16))
+sns.histplot(df.Age, bins = 20, ax=ax[0,0])
+sns.histplot(df.Pregnancles, bins = 20, ax=ax[0,1])
+sns.histplot(df.Glucose, bins = 20, ax=ax[1,0])
+sns.histplot(df.BloodPressure, bins = 20, ax=ax[1,1])
+sns.histplot(df.SkinThickness, bins = 20, ax=ax[2,0])
+sns.histplot(df.Insulin, bins = 20, ax=ax[2,1])
+sns.histplot(df.DiabetesPedigreeFunction, bins = 20, ax=ax[3,0])
+sns.histplot(df.BMI, bins = 20, ax=ax[3,1])
+
+Code:
+corr=df.corr()
+
+sns.set(font_scale=1.15)
+plt.figure(figsize=(14, 10))
+
+sns.heatmap(corr, vmax=.8, linewidths=0.01,
+            square=True,annot=True,cmap='YlGnBu',linecolor="black")
+plt.title('Correlation between features');
+
+Code:
+from sklearn.metrics import accuracy_score
+from sklearn.metrics import classification_report
+from sklearn.metrics import confusion_matrix
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import GradientBoostingClassifier
+
+X = df.iloc[:, :-1]
+y = df.iloc[:, -1]
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=0)
+
+Code:
+#Model
+LR = LogisticRegression()
+
+#fiting the model
+LR.fit(X_train, y_train)
+
+Code:
+#prediction
+y_pred = LR.predict(X_test)
+
+Code:
+#Accuracy
+print("Accuracy ", LR.score(X_test, y_test)*100)
+
+Code:
+#Plot the confusion matrix
+sns.set(font_scale=1.5)
+cm = confusion_matrix(y_pred, y_test)
+sns.heatmap(cm, annot=True, fmt='g')
+plt.show()
+
+Code:
+print("Classification Report:\n", classification_report(y_test, y_pred))
+
+Code:
+fpr, tpr, thresholds = roc_curve(y_test, y_pred)
+roc_auc = auc(fpr, tpr)
+
+plt.figure()
+plt.plot(fpr, tpr, color='blue', lw=2, label=f'ROC Curve (AUC = {roc_auc:.2f})')
+plt.plot([0, 1], [0, 1], color='gray', lw=2, linestyle='--')
+plt.xlabel('False Positive Rate')
+plt.ylabel('True Positive Rate')
+plt.title('Receiver Operating Characteristic (ROC) Curve')
+plt.legend(loc="lower right")
+plt.show()
+
+================================================================================
+
+Practical No. 10
+
+Code:
+#pract 10 (linear regression)
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+%matplotlib inline
+url = '/content/Ecommerce Customers(1).csv'
+customers = pd.read_csv(url)
+
+Code:
+customers.head()
+
+Code:
+customers.describe()
+
+Code:
+customers.info()
+
+Code:
+
+
+Code:
+import seaborn as sns
+sns.jointplot(x=customers['Time on Website'],y=customers['Yearly Amount Spent'])
+
+Code:
+sns.jointplot(x=customers['Time on App'],y=customers['Yearly Amount Spent'])
+
+Code:
+sns.jointplot(x=customers['Time on App'],y=customers['Yearly Amount Spent'],kind='kde')
+
+Code:
+sns.pairplot(customers)
+
+**Training and testing data split**
+
+Code:
+y =  customers['Yearly Amount Spent']
+x= customers[['Avg. Session Length','Time on App','Time on Website','Length of Membership']]
+
+Code:
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state=441)
+
+Code:
+X_train
+
+Code:
+X_test
+
+Code:
+y_train
+
+Code:
+y_test
+
+**Training the model**
+
+Code:
+from sklearn.linear_model import LinearRegression
+lm= LinearRegression()
+
+Code:
+lm.fit(X_train,y_train)
+
+Code:
+print('Coefficients : \n', lm.coef_)
+
+Code:
+print(lm.intercept_)
+
+Predicting Test **Data**
+
+Code:
+
+
+Code:
+predictions= lm.predict(X_test)
+predictions
+
+Code:
+plt.scatter(y_test,predictions)
+plt.xlabel('Y Test')
+plt.ylabel('Predicted Y')
+
+**Evaluating the model**
+
+Calculate the Mean Absolute Error, Mean Squared Error and Root means sq. error
+
+Code:
+from sklearn import metrics
+print('MAE : ',metrics.mean_absolute_error(y_test,predictions))
+print('MSE : ',metrics.mean_squared_error(y_test,predictions))
+print('RMSE : ',np.sqrt(metrics.mean_squared_error(y_test,predictions)))
+
+**Residuals**
+
+Code:
+import seaborn as sns
+sns.distplot((y_test-predictions),bins=50)
+
+**Conclusion**
+
+Code:
+Coefficients =  pd.DataFrame(lm.coef_,x.columns,columns=['Coeffecients'])
+Coefficients
+
