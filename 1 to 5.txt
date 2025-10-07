@@ -1,0 +1,481 @@
+#Practical 1 - Basic Commands
+#Assignment Operator 
+x=5
+x
+
+#Concatenate Function -
+y=c(4,5,6,8)
+y
+
+#Scan Function 
+s=scan()
+2
+
+s
+
+#Assigning Method
+z=1:10
+z
+
+#Sequence 
+a=seq(1,20,5)
+a
+
+#Find The min , max , length,product,sum, square root ,mean ,median ,SD, variance, sort 
+#and summary for the following series of the data 
+#Marks : 25,23,21,14,18,19,15,16,12,10
+
+m=c(25,23,21,14,18,19,15,16,12,10)
+m
+max(m)
+min(m)
+length(m)
+sum(m)
+prod(m)
+sqrt(m)
+sqrt(sum(m))
+mean(m)
+median(m)
+mode(m)
+sd(m)
+var(m)
+#cumulative freqeuncy 
+cumsum(m)
+#sorting in Ascending Order
+sort(m)
+#sorting in descending Order
+sort(m,decreasing = T)
+summary(m)
+
+#Q2 Find The min , max , length,product,sum, square root ,mean ,median ,SD, variance, sort 
+#and summary for the following series of the data 
+
+#weight = 32,42,45,25,56,43,65,34,43,45
+
+w=scan()
+w
+min(w)
+max(w)
+length(w)
+prod(w)
+sum(w)
+sqrt(w)
+sqrt(sum(w))
+mean(w)
+median(w)
+mode(w)
+sd(w)
+var(w)
+#cumulative freqeuncy 
+cumsum(w)
+#sorting in Ascending Order
+sort(w)
+#sorting in descending Order
+sort(w,decreasing = T)
+summary(w)
+
+#Data structure in r
+num_vec=c(3,5,6,7)
+num_vec
+
+char_vec <- c("Apple", "Mango", "Orange")
+char_vec
+
+# To Create Matrix
+mat <- matrix(1:9, nrow = 3, ncol = 3)
+mat
+
+mat1 <- matrix(c(12, 23, 53, 14, 36, 25, 78, 64, 45), nrow = 3, ncol = 3)
+mat1
+
+mat2 <- matrix(c(12, 23, 53, 14, 36, 25), nrow = 2, ncol = 3)
+mat2
+
+mat3 <- matrix(c(12, 23, 53, 14, 36, 25), nrow = 3, ncol = 2)
+mat3
+
+# To Create List
+my_list <- list(4, "Mango", TRUE, 14 + 51)
+my_list
+
+# To Create Data Frame
+df <- data.frame(
+  ID = c(1, 2, 3, 4),
+  Fruit = c("apple", "mango", "apple", "mango"),
+  Available = c(TRUE, FALSE, TRUE, FALSE)
+)
+df
+
+Q3 .Using following data construct a matrix of order 3x3 and perform element wise multiplication,
+matrix multiplication, transpose of matrix, diagonal of matrix, inverse of matrix, and rank of matrix
+# Create a vector
+b <- c(3, 5, 7, 3, 4, 2, 7, 3, 9)
+b
+
+# Create a matrix
+B <- matrix(data = b, nrow = 3, ncol = 3)
+B
+
+# Element-wise Multiplication
+B * B
+
+# Matrix Multiplication
+B %*% B
+
+# Inverse of Matrix
+solve(B)
+
+# Joining two matrices together
+cbind(B, B)
+rbind(B, B)
+
+# Finding Diagonal Elements
+diag(B)
+
+# Transpose of Matrix
+t(B)
+
+# Rank of Matrix
+qr(B)$rank
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+PRACTICAL NO : 2
+Aim : Import the data from excel/.csv to find mean, mode, median, standard deviation,
+variance, length, sum, sort, range, square root, summary, quantile
+Q.1. Import the data from excel/.csv
+to find mean,median,mode,SD,variance,length,sum,sort,range,sqrt,summary,quantile.
+
+data = read.csv("C:/Users/kunal/Downloads/rm.csv")
+data
+
+y= data$x
+y
+length(y)
+sum(y)
+min(y)
+max(y)
+mean(y)
+median(y)
+mode(y)
+sd(y)
+var(y)
+sort(y)
+sort(y,decreasing = TRUE)
+range(y)
+sqrt(y)
+summary(y)
+quantile(y, 0.25)
+quantile(y, 0.50)
+quantile(y, 0.75)
+
+Q.3. Import the data from excel/.csv
+to find mean,median,mode,SD,variance,length,sum,sort,range,sqrt,summary,quantile.
+
+data = read.csv("C:/Users/kunal/Downloads/rm.csv")
+data
+
+m=data$marks
+m
+h=data$height
+h
+
+m;h
+# Length
+length(m)
+length(h)
+
+# Sum
+sum(m)
+sum(h)
+
+# Mean
+mean(m)
+mean(h)
+
+# Median
+median(m)
+median(h)
+
+# Mode (Note: R doesn’t have a built-in mode function for numeric data)
+mode(m)
+mode(h)
+
+mode=function(x){
+  uniqx=unique(x)
+  uniqx[which.max(tabulate(match(x,uniqx)))]
+}
+
+mode(m)
+
+# Standard Deviation
+sd(m)
+sd(h)
+
+# Variance
+var(m)
+var(h)
+
+# Minimum
+min(m)
+min(h)
+
+# Maximum
+max(m)
+max(h)
+
+# Range
+range(m)
+range(h)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+3. Perform R program for making Diagrams
+x = c("Punjab","Haryana","U.P","Gujrat","Bihar","Karnataka")
+x
+
+y = c(729,943,1469,2903,2153,2276)
+y
+
+barplot(y,names.arg = x,col="red",header="blue",main="Yeild of the rice in KG per 
+        acer in each state of india",xlab ="state",ylab="yield" )
+
+
+
+x = c("red","green","blue","yellow","orange")
+x
+
+y = c(45,17,50,48,40)
+y
+
+
+barplot(y,names.arg = x,col="yellow", header="blue",main ="the favourite colors
+        of 200 kids",xlab= "favcolor", ylab="students")
+
+
+
+clg = c("A","B","C","D")
+
+clgA = c(1200,600,500)
+clgB = c(1000,800,650)
+clgC = c(1400,700,850)
+clgD = c(750,900,300)
+
+d =data.frame(clgA,clgB,clgC,clgD)
+d
+
+d1 = as.matrix(d)
+d1
+
+#Multiple
+barplot(d1,beside =TRUE,name.org= clg,col=1:2:3,legend=c("Arts","Commerce","Science"),
+        xlab="College",ylab ="no of students")
+
+#subdivided
+barplot(d1,beside =FALSE,name.org= clg,col=1:2:3:4,legend=c("A","B","C","D"),
+        xlab="College",ylab ="no of students")
+
+#horizontal
+barplot(d1,beside =TRUE,horiz=TRUE,name.org= clg,col=1:2:3:4,legend=c("A","B","C","D"),
+        xlab="College",ylab ="no of students")
+
+
+
+Country =c("france","U.k","Mexico","Neigaria","Australia") 
+
+france = c(55,56,65)
+U.k = c(50,53,63)
+Mexico = c(65,78,80)
+Neigarai =c(60,82,85)
+Australia = c(57,65,74)
+
+d = data.frame(france,U.k,Mexico,Neigarai,Australia)
+d
+
+
+d1 = as.matrix(d)
+d1
+
+#Multiple
+barplot(d1,beside =TRUE,name.org= clg,col=1:2:3,legend=c("france","U.k","Mexico","Neigarai","Australia"),
+        xlab="Country",ylab ="no of population")
+
+
+#subdivided
+barplot(d1,beside =FALSE,name.org= clg,col=1:2:3,legend=c("france","U.k","Mexico","Neigarai","Australia"),
+        xlab="Country",ylab ="no of population")
+
+
+#horizontal
+barplot(d1,beside =TRUE,horiz=TRUE,name.org= clg,col=1:2:3:4,legend=c("france","U.k","Mexico","Neigarai","Australia"),
+        xlab="Country",ylab ="no of population")
+
+# Create vectors
+itm <- c("food", "clothing", "electric", "movie", "rent", "misc")
+exp <- c(87, 24, 11, 13, 25, 20)
+
+# Pie Chart
+pie(
+  exp,
+  main = "Expenditure",
+  labels = itm,
+  radius = 1,
+  col = rainbow(length(exp))
+)
+
+# Create vectors
+src <- c("Govt Canals", "Tanks", "Wells and Tubewells", "Others")
+milhect <- c(135, 33, 168, 24)
+
+# Pie Chart
+pie(
+  milhect,
+  main = "Angle in Degree",
+  labels = src,
+  radius = 1,
+  col = rainbow(length(milhect))
+)
+
+# Create vectors
+Activity <- c("Office Works", "Exercise", "Travelling", "Watching Shows", "Sleeping", "Miscellaneous")
+Noofhrs <- c(9, 1, 2, 3, 7, 2)
+
+# Pie Chart
+pie(
+  Noofhrs,
+  main = "Angle in Hours",
+  labels = Activity,
+  radius = 1,
+  col = rainbow(length(Noofhrs))
+)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+4.Aim : Perform R program for making Graphs
+Q. Represent the following data by a histogram, frequency polygon and Ogive
+
+x =  seq(150,175,5)
+f= c(6,11,14,9,3,2)
+y= rep(x,f)
+hist(y)
+t=seq(147.5,177.5,5)
+hist(y,breaks = t)
+
+midx = seq(12.5,112.5,25)
+f =c(5,8,13,11,3)
+cls_limit = seq(0,125,25)
+y = rep(midx,f)
+hist(y)
+hist(y, breaks = cls_limit)
+
+
+# Frequency Polygon
+lb=seq(0,100,25)
+ub=seq(25,125,25)
+midx = (lb +ub)/2
+f=c(5,8,13,11,3)
+x0 =c(0,midx,125)
+f0 =c(0,f,0)
+y=rep(midx,f)
+bks =seq(0,125,25)
+hist(y,breaks = bks)
+lines(x0,f0)
+
+plot(x0,f0,main = "Frequency polygon",xlab = "X-axis",ylab = "Y-axis",type = "o",
+     lty=6,xlim = range(min(x0),max(x0)))
+
+#Q4
+f=c(5,8,13,11,3)
+f
+lc=cumsum(f)
+lc
+uc=1:5
+uc
+for(i in 5:1)
+{uc[i]=sum(f[5:i])}
+uc
+lbx=seq(0,100,25)
+lbx
+ubx=seq(25,125,25)
+ubx
+
+
+
+plot(ubx,lc,type = "l",xlim=c(0,100),xlab = "Class Interval", ylab = "Cumulative Frequency", lwd=2)
+lines(lbx,uc,type = "l",xlim=c(0,100),xlab = "Class Interval", ylab = "Cumulative Frequency", lwd=2)
+
+
+
+midx = seq(5,85,10)
+f =c(12,14,9,10,20,40,16,8,6)
+cls_limit = seq(0,90,10)
+y = rep(midx,f)
+hist(y)
+hist(y, breaks = cls_limit)
+
+lb=seq(0,100,25)
+ub=seq(25,125,25)
+midx = (lb +ub)/2
+f=c(5,8,13,11,3)
+x0 =c(0,midx,125)
+f0 =c(0,f,0)
+y=rep(midx,f)
+bks =seq(0,125,25)
+hist(y,breaks = bks)
+lines(x0,f0)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+5.  Q1. A DIE IS TURNED UP132 TIMES WITH THE FOLLOWING RESULTSNO OF TURNED UP: 1 2
+3 4 5 6 FREQUENCY:16 20 25 14 29 28 WITH EXPECTED FREQUENCIES 1/6 FOR EACH NO IS
+THE DIE UNBIASED
+
+
+# Create data
+x <- c(16, 20, 25, 14, 29, 28)
+
+# Chi-Square Test
+ch.test <- chisq.test(x, p = c(1/6, 1/6, 1/6, 1/6, 1/6, 1/6))
+ch.test
+
+Q2. We collected wild tulips and found that 81 were red, 50 were yellow and27 were
+white..Suppose that, in the region where you
+collected the data, the ratio of red, yellow and white tulip is 3:2:1 (3+2+1 = 6). This means
+that the expected proportion is: 3/6 (= 1/2) for red,2/6 ( = 1/3) for yellow, 1/6 for white. Test
+the hypothesis using chi square test of goodnessof fit.
+
+# Create data
+x <- c(81, 50, 27)
+
+# Chi-Square Test
+ch.test <- chisq.test(x, p = c(1/2, 1/3, 1/6))
+ch.test
+
+
+Q3.
+# Create data
+x <- c(70, 80, 35, 50, 20, 45)
+
+# Create matrix
+y <- matrix(x, nrow = 3, ncol = 2)
+y
+
+# Chi-Square Test without Yates correction
+chisq <- chisq.test(y, correct = FALSE)
+chisq
+
+Q4.TWO RESEARCHERS ADOPTED DIFFERENT SAMPLING TECHNIQUES WHILE
+INVESTIGATING THE SAME GROUP OF STUDENTSTO FIND THE NUMBER OF STUDENTS
+FALLING IN DIFFERENT INTELLIGENCE LEVEL.THE RESULTS ARE AS FOLLOWS
+
+
+# Create data
+x <- c(86, 40, 60, 33, 44, 25, 10, 5)
+
+# Create matrix
+y <- matrix(x, nrow = 2, ncol = 4)
+y
+
+# Chi-Square Test without Yates correction
+chisq <- chisq.test(y, correct = FALSE)
+chisq
+
+
+
