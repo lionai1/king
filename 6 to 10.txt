@@ -1,0 +1,534 @@
+PRACTICAL-6
+AIM: Perform an R program on z-test- One population mean, Two population means, One
+population proportion, Two population proportion.
+CASE 1: One population mean
+Q1. Test the hypothesis H0:M=10 against H1:M!=10. A random sample of size 400 is
+drawn and the given mean is 10.2 and Standard Deviation 2.25. Use 5% Level of
+Significance.
+
+# Hypothesis Test: HO: P = 0.2 vs H1: P != 0.2, Level of Significance = 0.05
+
+P <- 0.2
+Q <- 1 - P
+n <- 400
+
+# Sample proportion
+p <- 50 / 400
+
+# Z-Statistic
+zcal <- (p - P) / sqrt(P * Q / n)
+zcal
+
+# P-Value
+pvalue <- 2 * (1 - pnorm(abs(zcal)))
+pvalue
+
+# Decision: pvalue < 0.05, reject HO
+
+Q2. A survey claims that 9 out of 10 doctors recommend aspirin for their patients with
+headaches. To test this claim, a random sample of 100 doctors are obtained. Out of these
+100 doctors, 82 indicate that they recommend aspirin. Is this claim accurate? Use 5%
+Level of Significance.
+# Hypothesis Test: HO: P = 0.9 vs H1: P != 0.9, Level of Significance = 0.05
+
+P <- 0.9
+Q <- 1 - P
+n <- 100
+
+# Sample proportion
+p <- 82 / 100
+
+# Z-Statistic
+zcal <- (p - P) / sqrt(P * Q / n)
+zcal
+
+# P-Value
+pvalue <- 2 * (1 - pnorm(abs(zcal)))
+pvalue
+
+# Decision: pvalue < 0.05, reject HO
+
+
+CASE 4: Two population proportion
+Q1. From each of two consignments of apples a sample of size 200 is drawn and the
+number of rotten counted test whether the proportion of rotten apples in the two
+consignments are different for - sample A size of 200 and number of rotten apples are 44
+and sample B size of 200 and number of rotten apples are 30. Use 5% Level of
+significance.
+
+# Two-Proportion Z-Test
+
+# Sample sizes
+n1 <- 200
+n2 <- 200
+
+# Sample proportions
+p1 <- 44 / 200
+p2 <- 30 / 200
+
+# Pooled proportion
+p <- (n1 * p1 + n2 * p2) / (n1 + n2)
+q <- 1 - p
+
+# Z-Statistic
+zcal <- (p1 - p2) / sqrt(p * q * (1/n1 + 1/n2))
+zcal
+
+# P-Value
+pvalue <- 2 * (1 - pnorm(abs(zcal)))
+pvalue
+
+# Decision: pvalue > 0.05, accept HO
+
+Q2. A drug research experimental unit is testing two drugs newly developed to reduce
+blood pressure levels. The drugs are administered to two different sets of animals.
+Drug Test Result -
+Animals Tested Animals Responded
+Drug1 600 350
+Drug2 500 260
+The research unit wants to test whether there is a difference between the efficiency of the
+said drug at 5% Level of Significance.
+
+# Two-Proportion Z-Test: HO: P1 = P2 vs H1: P1 != P2, Level of Significance = 5%
+
+# Sample sizes
+n1 <- 600
+n2 <- 500
+
+# Sample proportions
+p1 <- 350 / 600
+p2 <- 260 / 500
+
+# Pooled proportion
+p <- (n1 * p1 + n2 * p2) / (n1 + n2)
+q <- 1 - p
+
+# Z-Statistic
+zcal <- (p1 - p2) / sqrt(p * q * (1/n1 + 1/n2))
+zcal
+
+# P-Value
+pvalue <- 2 * (1 - pnorm(abs(zcal)))
+pvalue
+
+# Decision: pvalue < 0.05, reject HO
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Practical no 7
+Case 1
+Q1) The following data refers to the amount of coffee(in ounces)
+filled by a machine in six randomly picked jars:
+15.7,15.9,16.3,16.2,15.7 and 15.9. Is the true mean amount of
+coffee in a jars is 16 ounces ? use los =5%
+# One-Sample t-Test
+
+# Sample data
+x <- c(15.7, 15.9, 16.3, 16.2, 15.7, 15.9)
+
+# t-Test against population mean mu = 16
+t.test(x, mu = 16)
+
+Q2) Raju restaurant near the railway station at Falna has been
+having average sales of 500 tea cups per day. Because of the
+development of a bus stand nearby , it expects to increase its sales .
+During the first 12 days after the start of the bus stand , the daily
+sales were as under :550,570,490,615,505,580,570,460,600,580,530,526. On the basis
+of this information , can one conclude that Raju’s restaurtant’s sales
+have increased ?
+# One-Sample t-Test (Right-tailed)
+
+# Sample data
+sales <- c(550, 570, 490, 615, 505, 580, 570, 460, 600, 580, 530, 526)
+
+# t-Test against population mean mu = 500, alternative hypothesis: greater
+t.test(sales, mu = 500, alternative = "greater")
+
+Q3) An IQ test was administered to 5 persons before and after they
+were trained . The results are as follows :
+Candidate: 1 2 3 4 5
+Before: 110 120 123 132 125
+After:120 118 125 136 121
+Test whether there is any change in IQ after the training
+Program at 1% Los
+
+# Paired t-Test: HO: M1 = M2 vs H1: M1 != M2, Level of Significance = 0.01
+
+# Sample data
+Before <- c(110, 120, 123, 132, 125)
+After <- c(120, 118, 125, 136, 121)
+
+# Paired t-Test
+t.test(Before, After, paired = TRUE)
+
+Q4) The sales data of a product in six shops before and after a
+special promotional campaign are as under:
+Shops : A B C D E F
+Before : 53 28 31 48 50 42
+After : 58 29 30 55 56 45
+Can the significance be judges to be success at 5% level of
+significance
+
+# Paired t-Test: HO: M1 = M2 vs H1: M1 < M2, Level of Significance = 0.05
+
+# Sample data
+Before <- c(53, 28, 31, 48, 50, 42)
+After <- c(58, 29, 30, 55, 56, 45)
+
+# Paired t-Test with alternative hypothesis "less"
+t.test(Before, After, paired = TRUE, alternative = "less")
+
+# Decision: p-value < 0.05, reject HO
+# Conclusion: The campaign can be judged to be successful at 5% significance level
+
+
+Q5) A group of seven week old chickens reared on a high protein
+diet weigh 12, 15,11,16,14,14 and 16 ounces ; a second group of
+five chickens similarly treated except that they except that they
+receive a low protein diet weigh 8,10,14,10 and 13 0unces .
+Test at 5% los whether there is significant evidence that additional
+protein has increased the weight of chicken .
+# Two-Sample t-Test: HO: M1 = M2 vs H1: M1 > M2, Level of Significance = 0.05
+
+# Sample data
+High_protein <- c(12, 15, 11, 16, 14, 14, 16)
+Low_protein <- c(8, 10, 14, 10, 13)
+
+# Two-Sample t-Test with equal variance assumption
+t.test(High_protein, Low_protein, alternative = "greater", var.equal = TRUE)
+
+# Decision: p-value < 0.05, reject HO
+# Conclusion: There is significant evidence that additional protein increases the weight of chicken
+
+
+
+Q6. A group of 5 patients treated with medicine A weight 42,39,48,60 and 41 kg second group
+of 7 patients from the same hospital treated with medicine B weight 38,42,56,64,68,69 and 62
+kgs. Do you agree with the claim that medicine B increase the weight significantly?
+# Q6: Weights of patients treated with Medicine A and B
+
+# Sample data
+medicine_A <- c(42, 39, 48, 60, 41)
+medicine_B <- c(38, 42, 56, 64, 68, 69, 62)
+
+# Perform unpaired (two-sample) t-test, alternative hypothesis: Medicine B > Medicine A
+t_test_result <- t.test(medicine_B, medicine_A, alternative = "greater")
+
+# Print the result
+print(t_test_result)
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Practical 8
+Sign Test
+
+Q1.THE FOLLOWING DATA GIVES THE WEIGHTS (INKG) OF 40
+STUDENTS IN A RANDOM SAMPLE 46,49,57,64,46,67,54,48,69,61,57,54,50,48,65,61,66,54,50,48,59,62, 47,49,47,55,59,63,53,56,67,49,60,64,53,50,48,51,52,54 USE SIGN TEST TO TEST WHETHER THE MEDIAN WEIGHT IN THE POPULATION IS 50 KG AGAINST ALTERNATIVE IT IS GREATER THAN 50KG
+
+# Binomial Test: H0: M = 50 vs H1: M > 50, Level of Significance = 5%
+
+# Sample data
+x <- c(46,49,57,64,46,67,54,48,69,61,57,54,50,48,65,61,66,54,50,48,59,62,
+       47,49,47,55,59,63,53,56,67,49,60,64,53,50,48,51,52,54)
+
+# Median under H0
+M <- 50
+
+# Count of observations above and below M
+SP <- length(x[x > M])
+SN <- length(x[x < M])
+n <- SP + SN  # Exclude ties (x == M)
+
+# P-Value using binomial test
+PVALUE <- pbinom(SN, n, 0.5)
+
+# Level of significance
+los <- 0.05
+
+# Decision
+if(PVALUE > los) {
+  cat("Accept H0")
+} else {
+  cat("Reject H0")
+}
+
+
+# Binomial Test: H0: M = 41 vs H1: M > 41, Level of Significance = 5%
+
+# Sample data
+x <- c(25, 29, 52, 48, 57, 39, 45, 36, 30, 49, 28, 39, 44, 63, 32, 65, 42)
+
+# Median under H0
+M <- 41
+
+# Count of observations above and below M
+SP <- length(x[x > M])
+SN <- length(x[x < M])
+n <- SP + SN  # Exclude ties (x == M)
+
+# P-Value using binomial test
+PVALUE <- pbinom(SN, n, 0.5)
+
+# Level of significance
+los <- 0.05
+
+# Decision
+if(PVALUE > los) {
+  cat("Accept H0")
+} else {
+  cat("Reject H0")
+}
+
+# Wilcoxon Signed Rank Test: HO: M = 20 vs H1: M > 20, Level of Significance = 5%
+
+# Sample data
+x <- c(15, 17, 24, 25, 20, 21, 32, 28, 12, 25, 24, 26)
+
+# Wilcoxon Signed Rank Test
+wilcox.test(x, alternative = "greater", mu = 20)
+
+Q2.A random sample of 10 infants showed the following pulse rate: minute: 110, 121, 125, 122, 112, 117, 129, 114, 124, 127. Assuming that th distribution of pulse rates is symmetric. Is there any evidence to s the median pulse rate of infants is more than 120 beats per minut Wilcoxon Signed Rank Test At 5%l.o.s.
+
+
+# Wilcoxon Signed Rank Test: HO: M = 120 vs H1: M > 120, Level of Significance = 5%
+
+# Sample data
+x <- c(110, 121, 125, 122, 112, 117, 129, 114, 124, 127)
+
+# Wilcoxon Signed Rank Test
+wilcox.test(x, alternative = "greater", mu = 120)
+
+
+Q3.TO DETERMINE THE EFFECTIVENESS OF A NEW TRAFFIC CONTROL SYSTEM THE NUMBER OF ACCIDENTS OCCURRED AT 12 DIFFERENT LOCATIONS DURING FOUR WEEKS BEFORE AND After 
+THE INSTALLATION OF NEW SYSTEM WERE OBSERVED AND RECORDED DATA IS AS FOLLOWS LOCATION
+# Wilcoxon Signed Rank Test: HO: M1 = M2 vs H1: M1 > M2, Level of Significance = 5%
+
+# Sample data
+x <- c(3, 5, 2, 3, 3, 3, 0, 4, 1, 6, 4, 1)
+y <- c(1, 2, 0, 2, 2, 0, 2, 3, 3, 4, 1, 0)
+
+# Differences
+d <- x - y
+
+# Wilcoxon Signed Rank Test
+wilcox.test(d, mu = 0, alternative = "greater")
+
+#reject H0
+
+Q4.THE WEIGHTS (INKGS) OF THE PERSONS BEFORE AND AF STOPPED SMOKING ARE AS FOLLOWS
+# Wilcoxon Signed Rank Test: HO: M1 = M2 vs H1: M1 != M2, Level of Significance = 5%
+
+# Sample data
+x <- c(65, 75, 75, 62, 72)
+y <- c(72, 82, 72, 66, 73)
+
+# Differences
+d <- x - y
+
+# Wilcoxon Signed Rank Test
+wilcox.test(d, mu = 0, alternative = "two.sided")
+
+
+#accept H0
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Practical No 9
+Case 1 ONE WAY ANOVA
+Q1.Q1.A DRUG COMPANY TESTED THREE FORMULATIONS OF A N RELIEF
+MEDICINE FOR MIGRAINE HEADACHE SUFFERS FOR THE EXPERIMENT 27
+VOLUNTEERS WERE SELECTED AND 9 WERE RANDOMLY ASSIGN THE ONE OF
+THREE DRUGS FORMULATION THE SUBJECTS WERE INSTRUCTED TO TAKE THE
+DRUG DURING THEIR NEXT MIGRAINE HEADACHE AND REPORT THEIR PAIN ON
+THE SCALEOF 1TO 10
+
+# One-Way ANOVA: HO: μ1 = μ2 = μ3 vs H1: At least two means differ
+
+# Sample data
+drug <- c(rep("A", 9), rep("B", 9), rep("C", 9))
+pain <- c(4,5,4,3,2,4,3,4,4, 6,8,4,5,4,6,5,8,6, 6,7,6,6,7,5,6,5,5)
+
+# Create data frame
+migraine <- data.frame(pain, drug)
+
+
+
+Q2.THREE PROCESS A,B,C ARE TESTED TO SEE WHETHER THERE
+OTPUTS ARE EQUIVALENT THE FOLLOWING OBSERVATIONS OF OUTPUT ARE MADE
+CARRY OUT ANOVA AND STATE YOUR CONCLUSION
+A:20,22,23,21,20,24,25,23
+B:19,21,20,22,23
+C:21,20,20,25,24,22,23
+# One-Way ANOVA: HO: Three test outputs are equivalent vs H1: At least two tests differ
+
+# Sample data
+tput <- c(20, 22, 23, 21, 20, 24, 25, 23, 19, 21, 20, 22, 23, 21, 20, 20, 25, 24, 22, 23)
+
+# Process groups
+process <- c(rep("A", 8), rep("B", 5), rep("C", 7))
+
+# Create data frame
+data <- data.frame(tput, process)
+
+
+
+TWO WAY ANOVA
+Q1. A TEA COMPANY APPOINTS FOUR SALESMAN 1,B,C,AND D AND OBSERVES
+THEIR SALES IN THREE
+SEASONS-SUMMER, WINTER, AND MONSOON, THE FIGURES (IN
+LAKHS) OF SALES ARE GIVEN IN THE FOLLOWING TABLE
+SEASON/SALES MA
+Season Sales A B C D
+Summer 36 32 21 30
+Winter 24 25 20 22
+Mansoon 20 10 19 15
+
+# Two-Way ANOVA: Effect of Season and Salesman
+
+# Factor levels
+f1 <- rep(1:3, each = 4)  # Seasons
+f2 <- rep(c("A", "B", "C", "D"), 3)  # Salesmen
+
+# Convert to factors
+season <- factor(f1)
+salesman <- factor(f2)
+
+# Sample data for sales (example, replace with actual data if available)
+sales <- c(20, 22, 19, 21, 25, 27, 23, 24, 30, 28, 26, 29)  
+
+# ANOVA model
+ans <- aov(sales ~ season + salesman)
+
+# Summary of ANOVA
+summary(ans)
+
+
+Q2 five differnet fertililizers are used and three types of seeds are grown the yeild
+obtained (INKGS) are tabulated below.
+FERT1 FERT2 FERT3 FERT4 FERT5
+Seed1 110 100 107 104 102
+Seed2 112 97 101 112 107
+Seed3 97 87 99 101 98
+
+# Two-Way ANOVA: Effect of Seed and Fertilizer on Yield
+
+# Factor levels
+f1 <- c(1,1,1,1,1,2,2,2,2,2,3,3,3,3,3)  # Seeds
+yield <- c(110,100,107,104,102,112,99,101,112,107,97,87,99,101,98)
+
+f2 <- rep(1:5, 3)  # Fertilizers
+
+# Convert to factors
+seed <- factor(f1)
+fertilizer <- factor(f2)
+
+# ANOVA model
+ans <- aov(yield ~ seed + fertilizer)
+
+# Summary of ANOVA
+summary(ans)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Practical 10
+
+FRIEDMAN TEST
+
+Q1.THE FOLLOWING shows the reaction time of five patients on fo different drugs. Since each patient is measured on each of the fou will use the Friedman Test to determine if the mean reaction time between drugs.
+# One-Way ANOVA: Test if mean reaction time differs between drugs
+
+# Sample data
+person <- rep(1:5, each = 4)
+drug <- rep(c(1,2,3,4), times = 5)
+score <- c(30,28,16,34,14,18,10,22,24,20,18,30,38,34,20,44,26,28,14,30)
+
+# Create data frame
+data <- data.frame(person, drug, score)
+
+# ANOVA model
+ans <- aov(score ~ factor(drug))
+
+# Summary of ANOVA
+summary(ans)
+
+
+# Kruskal-Wallis Test: Test for significant difference in time taken across machines
+
+# Sample data
+X <- c(2.9, 3.0, 2.5, 2.6, 3.2)
+Y <- c(3.8, 2.7, 4.0, 2.4)
+Z <- c(2.8, 3.4, 3.7, 2.2, 2.0)
+
+# Perform Kruskal-Wallis Test
+kruskal.test(list(X, Y, Z))
+
+# Decision: p-value = 0.68 > 0.05, accept HO
+
+friedman.test(y = data$score, groups = data$drug, blocks = data$person)
+
+Q2.TEST THE CLAIM AT 5% L.O.S THAT ALL THREE DRUGS SAME PROBABILITY DISTRIBUTION USE FRIEDMAN TEST
+REACTION TIME FOR THREE DRUGS
+
+# Reaction time data for each drug across subjects
+
+# Sample data
+druga <- c(1.21, 1.63, 1.42, 2.43, 1.16, 1.94)
+drugB <- c(1.48, 1.85, 2.06, 1.98, 1.27, 2.44)
+drugC <- c(1.56, 2.01, 1.70, 2.64, 1.48, 2.81)
+
+# Combine data into a data frame
+reaction_time <- data.frame(
+  subject = factor(1:6),
+  druga = druga,
+  drugB = drugB,
+  drugC = drugC
+)
+
+# Friedman Test
+result <- friedman.test(as.matrix(reaction_time[, 2:4]))
+print(result)
+
+#Reject H0
+
+KRUSKAL WALLIS TEST
+
+Q1 TEST THE HYPOTHESIS THAT THERE IS NO SIGNIFICANT DIFFERENCE BETWEEN MEANS OF ALL FOUR GROUPS
+GROUP A:1,5,8,17,16
+GROUP B:2,1,6,5,7,4
+GROUP C:1,1,3,7,9
+# Kruskal-Wallis Test: HO: No significant difference between means of 4 groups
+# H1: Significant difference exists between means of 4 groups
+
+# Sample data
+A <- c(1, 5, 8, 17, 16)
+B <- c(2, 1, 6, 5, 7, 4)
+C <- c(1, 1, 3, 7, 9)
+D <- c(2, 1, 5, 2, 9, 7)
+
+# Perform Kruskal-Wallis Test
+kruskal.test(list(A, B, C, D))
+
+# Decision: p-value = 0.5379 > 0.05, accept HO
+
+Q5 THE TIME TAKEN TO COMPLETE A JOB ON THREE MACHINES ARE NOTED TEST THE HYPOTHESIS THAT THERE IS NO SIGNIFICANT DIFFERENCE BETWEEN AVERAGE TIME TAKEN ON THIS MACHINES TO COMPLETE THE JOB
+MACHINE X:2.9,30,2.5,2.6,3.2
+MACHINE Y:3.8,2.7,4.0,2.4
+MACHINE Z:2.8,3.4,3.7,2.2.2.0
+
+# Kruskal-Wallis Test: HO: No significant difference in average time across machines
+# H1: Significant difference exists
+
+# Sample data
+X <- c(2.9, 3.0, 2.5, 2.6, 3.2)
+Y <- c(3.8, 2.7, 4.0, 2.4)
+Z <- c(2.8, 3.4, 3.7, 2.2, 2.0)
+
+# Perform Kruskal-Wallis Test
+kruskal.test(list(X, Y, Z))
+
+# Decision: p-value = 0.68 > 0.05, accept HO
+
+
+
+
